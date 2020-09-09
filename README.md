@@ -12,7 +12,7 @@ Then, run `generateBenchPic.py` to generate a chart pictrue in this directory.
 
 In `generateBenchPic.py `, change the value of var `coreType`(`'single'` or other ) to set whether to generate a single-core graph or a multi-core graph.
 
-Some the operate to directory `cinebenchr20` and `geekbench5`.
+Same the operate to directory `cinebenchr20` and `geekbench5`.
 
 ----
 ----
