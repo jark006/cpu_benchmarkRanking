@@ -4,7 +4,7 @@
 
 ## System: Windows10
 
-### You need change the value of var `fontFile `(path to fonfile:" xxx.ttc") to run on other systems.
+### You need change the value of var `fontFile `(path to fontfile:" xxx.ttc") to run on other systems.
 
 ## Lib request: ` OpenCV, BeautifulSoup, numpy, matplotlib, scipy, PIL ` 
 
