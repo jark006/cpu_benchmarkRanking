@@ -2,6 +2,10 @@
 
 ## Lang: Python3.X
 
+## System: Windows10
+
+### You need change the value of var `fontFile `(path to fonfile:" xxx.ttc") to run on other systems.
+
 ## Lib request: ` OpenCV, BeautifulSoup, numpy, matplotlib, scipy, PIL ` 
 
 First step, cd to one of those directory, such as  `cd ./cinebenchr15` ;
