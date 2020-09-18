@@ -2,7 +2,7 @@
 
 ## Lang: Python3.X
 
-## Lib request: ` BeautifulSoup, numpy, matplotlib, scipy, PIL ` 
+## Lib request: ` OpenCV, BeautifulSoup, numpy, matplotlib, scipy, PIL ` 
 
 First step, cd to one of those directory, such as  `cd ./cinebenchr15` ;
 
