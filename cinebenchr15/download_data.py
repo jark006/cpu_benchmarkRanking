@@ -348,45 +348,25 @@ def CalcSha1(filepath):
     except IOError:
         return 'xx'
 
-s = 's'
-
 if __name__ == '__main__':
-    returnValue = 0
 
-    download2htmlfile(url[0], htmlPath[0])
+    #download2htmlfile(url[0], htmlPath[0])
     singlebody = htmlfile2chart(htmlPath[0])
     name_list, score_list = chart2rawlist(singlebody)
 
     intel_list, amd_list = rawlist_depart(name_list, score_list)
     print(unsupport_list)
-
     save_list(path[0], intel_list, amd_list)
-    hashNew = CalcSha1(path[0])
-    hashOld = CalcSha1(pathLast[0])
-    if(hashNew != hashOld):
-        print(path[0]+' is update, need to generate a new benchmark piture.')
-        save_list(pathLast[0], intel_list, amd_list)
-        returnValue += 1
-    else:
-        print(path[0]+' nothing change.')
 
 
-    download2htmlfile(url[1], htmlPath[1])
+    # download2htmlfile(url[1], htmlPath[1])
     multibody = htmlfile2chart(htmlPath[1])
     name_list, score_list = chart2rawlist(multibody)    
 
     intel_list, amd_list = rawlist_depart(name_list, score_list)
     print(unsupport_list)
     save_list(path[1], intel_list, amd_list)
-    hashNew = CalcSha1(path[1])
-    hashOld = CalcSha1(pathLast[1])
-    if(hashNew != hashOld):
-        print(path[1]+' is update, need to generate a new benchmark piture.')
-        save_list(pathLast[1], intel_list, amd_list)
-        returnValue += 2
-    else:
-        print(path[1]+' nothing change.')
     
-    exit(returnValue)
+    exit()
 
 

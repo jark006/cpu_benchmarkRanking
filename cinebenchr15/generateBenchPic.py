@@ -20,8 +20,8 @@ from download_data import Node
 import math
 import random
 
-buildType = 'debugd'
-coreType = 'singleD'
+buildType = 'debugk'
+coreType = 'single'
 
 dataSource = r'CinebenchR15'
 datalink = r'https://www.cpu-monkey.com/'
@@ -33,7 +33,7 @@ fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 
 
 if coreType == 'single':
-    bench_version = r'Beta V0.5'
+    bench_version = r'Beta V0.6'
     baseScore = 100
     parameter = [3348.58915603, - 270.36700463, 83.38583544]  # R15 single
     title = dataSource+'单核性能天梯图'
@@ -57,7 +57,7 @@ if coreType == 'single':
         # Node('AMD', 'R9', 'R9 3900XT', 7480, 'desktop'),
     ]
 else:
-    bench_version = r'Beta V0.5'
+    bench_version = r'Beta V0.6'
     baseScore = 500
     parameter = [1023.49296577, -396.78088766, 80.97501709]  # R15 multi
     title = dataSource+'多核性能天梯图'
@@ -91,7 +91,7 @@ else:
     ]
 
 build_date = time.strftime("%Y%m%d", time.localtime())
-pic_path = title + build_date + bench_version + '.png'
+pic_path = '../'+title + build_date + bench_version + '.png'
 
 
 

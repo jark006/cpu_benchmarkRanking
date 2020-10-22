@@ -1,4 +1,4 @@
-392
+413
 Intel
 Xeon
 W-3175X
@@ -51,12 +51,12 @@ i9-9980XE
 desktop
 Intel
 Xeon
-W-3245
+W-3245M
 7444
 desktop
 Intel
 Xeon
-W-3245M
+W-3245
 7444
 desktop
 Intel
@@ -86,12 +86,17 @@ Gold 6148
 desktop
 Intel
 i9
-i9-9940X
-5912
+i9-10850K
+6318
 desktop
 Intel
 i9
 i9-10900F
+5912
+desktop
+Intel
+i9
+i9-9940X
 5912
 desktop
 Intel
@@ -111,12 +116,12 @@ Gold 6130
 desktop
 Intel
 i7
-i7-10700K
+i7-10700KF
 5292
 desktop
 Intel
 i7
-i7-10700KF
+i7-10700K
 5292
 desktop
 Intel
@@ -171,12 +176,12 @@ i9-9900X
 desktop
 Intel
 i7
-i7-10700
+i7-10700F
 4834
 desktop
 Intel
 i7
-i7-10700F
+i7-10700
 4834
 desktop
 Intel
@@ -256,12 +261,12 @@ i7-9700K
 desktop
 Intel
 i7
-i7-9700
+i7-9700F
 3644
 desktop
 Intel
 i7
-i7-9700F
+i7-9700
 3644
 desktop
 Intel
@@ -271,12 +276,12 @@ i9-10980HK
 laptop
 Intel
 i5
-i5-10600K
+i5-10600KF
 3629
 desktop
 Intel
 i5
-i5-10600KF
+i5-10600K
 3629
 desktop
 Intel
@@ -315,6 +320,11 @@ i9-9880H
 3462
 laptop
 Intel
+i7
+i7-10870H
+3457
+laptop
+Intel
 i5
 i5-10500
 3392
@@ -326,12 +336,12 @@ E5-2680 v3
 desktop
 Intel
 i5
-i5-10400
+i5-10400F
 3197
 desktop
 Intel
 i5
-i5-10400F
+i5-10400
 3197
 desktop
 Intel
@@ -356,12 +366,12 @@ i7-10850H
 laptop
 Intel
 i5
-i5-10500T
+i5-10500TE
 2829
 desktop
 Intel
 i5
-i5-10500TE
+i5-10500T
 2829
 desktop
 Intel
@@ -421,6 +431,11 @@ i7-8750H
 laptop
 Intel
 i7
+i7-1185G7
+2477
+laptop
+Intel
+i7
 i7-8850H
 2468
 laptop
@@ -431,7 +446,7 @@ i3-10320
 desktop
 Intel
 Xeon
-E-2226G
+E-2236
 2407
 desktop
 Intel
@@ -441,7 +456,7 @@ E-2226GE
 desktop
 Intel
 Xeon
-E-2236
+E-2226G
 2407
 desktop
 Intel
@@ -481,13 +496,18 @@ i5-8400
 desktop
 Intel
 i5
-i5-8500
+i5-8500B
 2287
 desktop
 Intel
 i5
-i5-8500B
+i5-8500
 2287
+desktop
+Intel
+i3
+i3-10100F
+2284
 desktop
 Intel
 i3
@@ -499,6 +519,11 @@ i7
 i7-7700K
 2257
 desktop
+Intel
+i7
+i7-1165G7
+2234
+laptop
 Intel
 i5
 i5-8600K
@@ -514,6 +539,11 @@ i7
 i7-7700
 2138
 desktop
+Intel
+i5
+i5-10300H
+2125
+laptop
 Intel
 i5
 i5-9300HF
@@ -850,15 +880,15 @@ i7-4770
 1349
 desktop
 Intel
-i5
-i5-6500
-1299
-desktop
-Intel
 i7
 i7-8650U
 1299
 laptop
+Intel
+i5
+i5-6500
+1299
+desktop
 Intel
 i5
 i5-5675C
@@ -971,14 +1001,19 @@ i5-4590T
 desktop
 Intel
 Pentium
-G5500
-916
+N6005
+925
 desktop
 Intel
 i3
 i3-8109U
 916
 laptop
+Intel
+Pentium
+G5500
+916
+desktop
 Intel
 i3
 i3-6100
@@ -1000,10 +1035,20 @@ G4560
 824
 desktop
 Intel
+Celeron
+N5105
+820
+desktop
+Intel
 i5
 i5-7300U
 802
 laptop
+Intel
+Pentium
+N6000
+774
+desktop
 Intel
 i7
 i7-7560U
@@ -1025,6 +1070,11 @@ i5-6200U
 735
 laptop
 Intel
+Pentium
+J5040
+730
+desktop
+Intel
 i5
 i5-5257U
 706
@@ -1039,6 +1089,21 @@ i7
 i7-7600U
 690
 laptop
+Intel
+Celeron
+N5100
+684
+desktop
+Intel
+Celeron
+J4125
+675
+desktop
+Intel
+Pentium
+J5005
+669
+desktop
 Intel
 i7
 i7-3520M
@@ -1065,14 +1130,24 @@ i3-3220
 639
 desktop
 Intel
+Celeron
+J4105
+634
+desktop
+Intel
+i5
+i5-8210Y
+632
+laptop
+Intel
 i7
 i7-5600U
 632
 laptop
 Intel
-i5
-i5-8210Y
-632
+i3
+i3-1000NG4
+612
 laptop
 Intel
 i7
@@ -1105,13 +1180,13 @@ i5-4260U
 575
 laptop
 Intel
-i7
-i7-4500U
+i5
+i5-3210M
 534
 laptop
 Intel
-i5
-i5-3210M
+i7
+i7-4500U
 534
 laptop
 Intel
@@ -1149,6 +1224,11 @@ Pentium
 4417U
 469
 laptop
+Intel
+Celeron
+N4505
+467
+desktop
 Intel
 i7
 i7-3517U
@@ -1198,6 +1278,11 @@ Intel
 Celeron
 N4120
 407
+desktop
+Intel
+Celeron
+N4500
+391
 desktop
 Intel
 i7
@@ -1307,7 +1392,7 @@ desktop
 AMD
 TR
 TR PRO 3975WX
-17967
+17768
 desktop
 AMD
 TR
@@ -1325,6 +1410,11 @@ TR 2990WX
 11463
 desktop
 AMD
+R9
+R9 5950X
+10360
+desktop
+AMD
 TR
 TR 2970WX
 10008
@@ -1333,6 +1423,11 @@ AMD
 R9
 R9 3950X
 9148
+desktop
+AMD
+R9
+R9 5900X
+8168
 desktop
 AMD
 EPYC
@@ -1370,6 +1465,11 @@ TR 2920X
 5843
 desktop
 AMD
+R7
+R7 5800X
+5724
+desktop
+AMD
 TR
 TR 1920X
 5326
@@ -1386,7 +1486,7 @@ R7 3800X
 desktop
 AMD
 R7
-R7 3700X
+R7 PRO 4750G
 4834
 desktop
 AMD
@@ -1396,7 +1496,7 @@ R7 4700G
 desktop
 AMD
 R7
-R7 PRO 4750G
+R7 3700X
 4834
 desktop
 AMD
@@ -1420,6 +1520,11 @@ R9 4900HS
 4315
 laptop
 AMD
+R5
+R5 5600X
+4312
+desktop
+AMD
 R7
 R7 2700X
 3951
@@ -1431,12 +1536,17 @@ R5 3600XT
 desktop
 AMD
 R7
+R7 4800HS
+3847
+laptop
+AMD
+R7
 R7 4800H
 3847
 laptop
 AMD
 R7
-R7 4800HS
+R7 4800U
 3847
 laptop
 AMD
@@ -1462,7 +1572,7 @@ desktop
 AMD
 R5
 R5 PRO 4650G
-3479
+3473
 desktop
 AMD
 R7
@@ -1499,11 +1609,6 @@ R7
 R7 1700
 3189
 desktop
-AMD
-R7
-R7 4800U
-3102
-laptop
 AMD
 R7
 R7 2700E
@@ -1546,11 +1651,6 @@ R5 3500X
 desktop
 AMD
 R3
-R3 PRO 4350G
-2597
-desktop
-AMD
-R3
 R3 4200G
 2597
 desktop
@@ -1581,13 +1681,13 @@ R7 4700U
 laptop
 AMD
 R3
-R3 3100
-2351
+R3 PRO 4350G
+2394
 desktop
 AMD
-R5
-R5 3400G
-1969
+R3
+R3 3100
+2351
 desktop
 AMD
 R5
@@ -1596,12 +1696,17 @@ R5 PRO 3400G
 desktop
 AMD
 R5
-R5 2400G
-1922
+R5 3400G
+1969
 desktop
 AMD
 R5
 R5 PRO 2400G
+1922
+desktop
+AMD
+R5
+R5 2400G
 1922
 desktop
 AMD
@@ -1626,6 +1731,11 @@ R5 3550H
 laptop
 AMD
 R7
+R7 PRO 3700U
+1515
+laptop
+AMD
+R7
 R7 3780U
 1515
 laptop
@@ -1635,18 +1745,13 @@ R7 3700U
 1515
 laptop
 AMD
-R7
-R7 PRO 3700U
-1515
-laptop
-AMD
 R5
-R5 3580U
+R5 PRO 3500U
 1483
 laptop
 AMD
 R5
-R5 PRO 3500U
+R5 3580U
 1483
 laptop
 AMD
@@ -1656,12 +1761,12 @@ R5 3500U
 laptop
 AMD
 R3
-R3 3200G
+R3 PRO 3200G
 1481
 desktop
 AMD
 R3
-R3 PRO 3200G
+R3 3200G
 1481
 desktop
 AMD
@@ -1686,12 +1791,12 @@ R5 2500U
 laptop
 AMD
 R3
-R3 2200G
+R3 PRO 2200G
 1307
 desktop
 AMD
 R3
-R3 PRO 2200G
+R3 2200G
 1307
 desktop
 AMD
@@ -1741,12 +1846,12 @@ FX-6350
 desktop
 AMD
 R3
-R3 2300U
+R3 PRO 2300U
 1008
 laptop
 AMD
 R3
-R3 PRO 2300U
+R3 2300U
 1008
 laptop
 AMD
@@ -1756,12 +1861,12 @@ FX-8320E
 desktop
 AMD
 R7
-R7 2700U
+R7 PRO 2700U
 935
 laptop
 AMD
 R7
-R7 PRO 2700U
+R7 2700U
 935
 laptop
 AMD

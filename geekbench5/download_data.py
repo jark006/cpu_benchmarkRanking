@@ -350,7 +350,7 @@ def CalcSha1(filepath):
 s = 's'
 
 if __name__ == '__main__':
-    # download2htmlfile(url, htmlPath)
+    download2htmlfile(url, htmlPath)
     singlebody, multibody = htmlfile2chart(htmlPath)
 
 

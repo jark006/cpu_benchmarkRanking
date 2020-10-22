@@ -20,8 +20,8 @@ from download_data import Node
 import math
 import random
 
-buildType = 'debugg'
-coreType = 'singleg'
+buildType = 'debugG'
+coreType = 'single'
 dataSource = r'Geekbench5'
 datalink = r'https://browser.geekbench.com/processor-benchmarks'
 authorInfo = r' 贴吧ID:泛感思杰 '
@@ -32,14 +32,14 @@ fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 
 
 if coreType == 'single':
-    bench_version = r'Beta V0.5'
+    bench_version = r'Beta V0.6'
     baseScore = 500
     parameter = [ 2.24473411e+03, -9.66584721e+02,  1.22222273e+00]  # geekbench single
     title = dataSource+'单核性能天梯图'
     watermarkText = title + ' Single-Core ' + authorInfo
     logoPath = 'logos.png'
     listPath = 'single_list.txt'
-    percent = [x for x in range(30, 286, 5)]
+    percent = [x for x in range(30, 311, 5)]
     
     intel_dict2 = {'i3': 3, 'i5': 1, 'i7': 2, 'i9': 3,
                 'Core2': 0, 'Pentium': 0, 'Celeron': 0, 
@@ -60,12 +60,12 @@ if coreType == 'single':
     }
 
     more = [
-        Node('AMD', 'R9', 'R9 3900XT', 1350, 'desktop'),
-        Node('AMD', 'R7', 'R7 3800XT', 1340, 'desktop'),
-        Node('AMD', 'R5', 'R5 3600XT', 1300, 'desktop'),
+        # Node('AMD', 'R9', 'R9 3900XT', 1350, 'desktop'),
+        # Node('AMD', 'R7', 'R7 3800XT', 1340, 'desktop'),
+        # Node('AMD', 'R5', 'R5 3600XT', 1300, 'desktop'),
     ]
 else:  # multiCore
-    bench_version = r'Beta V0.5'
+    bench_version = r'Beta V0.6'
     baseScore = 1000
     parameter = [1.40299769e+03, - 1.79848915e+03, - 8.62352477e-01] # geekbench multi
     title = dataSource+'多核性能天梯图'
@@ -93,14 +93,14 @@ else:  # multiCore
                 'APU': 1, 'Phenom': 2, 'Athlon': 3, 'Turion': 0}
     # 修正分数
     fix_score = {
-        'W-3175X': 20500,
-        'i9-9980XE': 15400,
-        'i9-7980XE': 15200,
-        'i9-9920X': 12400,
+        # 'W-3175X': 20500,
+        # 'i9-9980XE': 15400,
+        # 'i9-7980XE': 15200,
+        # 'i9-9920X': 12400,
 
-        'TR 2950X': 13500,
-        'TR 2970WX': 16000,
-        'TR 2990WX': 18000,
+        # 'TR 2950X': 13500,
+        # 'TR 2970WX': 16000,
+        # 'TR 2990WX': 18000,
     }
     # # block list
     # blocklist = [
@@ -111,13 +111,13 @@ else:  # multiCore
     # ]
 
     more = [
-        Node('AMD', 'R9', 'R9 3900XT', 13700, 'desktop'),
-        Node('AMD', 'R7', 'R7 3800XT',  9700, 'desktop'),
-        Node('AMD', 'R5', 'R5 3600XT',  7400, 'desktop'),
+        # Node('AMD', 'R9', 'R9 3900XT', 13700, 'desktop'),
+        # Node('AMD', 'R7', 'R7 3800XT',  9700, 'desktop'),
+        # Node('AMD', 'R5', 'R5 3600XT',  7400, 'desktop'),
     ]
 
 build_date = time.strftime("%Y%m%d", time.localtime())
-pic_path = title + build_date + bench_version + '.png'
+pic_path = '../'+title + build_date + bench_version + '.png'
 
 
 
@@ -436,7 +436,7 @@ img[-downEdgeHigh:, :] = (255, 127, 39, 255)
 
 img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGRA)
 logo = cv2.imread('qr2.png', cv2.IMREAD_UNCHANGED)
-xOffset, yOffset = 30, 130
+xOffset, yOffset = 30, 230
 for x in range(0, logo.shape[0]):
     for y in range(0, logo.shape[1]):
         a = np.array(logo[x, y], dtype=int)
@@ -447,7 +447,7 @@ for x in range(0, logo.shape[0]):
 
 
 logo = cv2.imread(logoPath, cv2.IMREAD_UNCHANGED)
-xOffset2, yOffset2 = 200, 130
+xOffset2, yOffset2 = xOffset+180, yOffset
 for x in range(0, logo.shape[0]):
     for y in range(0, logo.shape[1]):
         a = np.array(logo[x, y], dtype=int)

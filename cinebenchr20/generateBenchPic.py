@@ -20,8 +20,8 @@ from download_data import Node
 import math
 import random
 
-buildType = 'debugg'
-coreType = 'singleh'
+buildType = 'debugX'
+coreType = 'single'
 
 dataSource = r'CinebenchR20'
 datalink = r'https://www.cpu-monkey.com/'
@@ -33,14 +33,14 @@ fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 
 
 if coreType == 'single':
-    bench_version = r'Beta V0.5'
+    bench_version = r'Beta V0.6'
     baseScore = 200
     parameter = [ 2.24473411e+03, -9.66584721e+02,  71.22222273e+00]  # R20 single
     title = dataSource+'单核性能天梯图'
     watermarkText = title + ' Single-Core ' + authorInfo
     logoPath = 'logos.png'
     listPath = 'single_list.txt'
-    percent = [x for x in range(90, 285, 5)]
+    percent = [x for x in range(90, 355, 5)]
     
     intel_dict2 = {'i3': 2, 'i5': 0, 'i7': 1, 'i9': 2,
                    'Core2': 0, 'Pentium': 0, 'Celeron': 0,'Celeron2': 0, 'Atom': 2}
@@ -58,7 +58,7 @@ if coreType == 'single':
         # Node('AMD', 'R9', 'R9 3900XT', 7480, 'desktop'),
     ]
 else:
-    bench_version = r'Beta V0.5'
+    bench_version = r'Beta V0.6'
     baseScore = 1000
     parameter = [428.14658258, -1477.89941712,    82.43770669]  # R20 multi
     title = dataSource+'多核性能天梯图'
@@ -90,7 +90,7 @@ else:
     ]
 
 build_date = time.strftime("%Y%m%d", time.localtime())
-pic_path = title + build_date + bench_version + '.png'
+pic_path = '../'+title + build_date + bench_version + '.png'
 
 
 
