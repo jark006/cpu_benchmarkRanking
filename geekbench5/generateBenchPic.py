@@ -20,7 +20,7 @@ from download_data import Node
 import math
 import random
 
-buildType = 'debugG'
+buildType = 'debugA'
 coreType = 'single'
 dataSource = r'Geekbench5'
 datalink = r'https://browser.geekbench.com/processor-benchmarks'
@@ -32,14 +32,14 @@ fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 
 
 if coreType == 'single':
-    bench_version = r'Beta V0.6'
+    bench_version = r'Beta V0.7'
     baseScore = 500
     parameter = [ 2.24473411e+03, -9.66584721e+02,  1.22222273e+00]  # geekbench single
     title = dataSource+'单核性能天梯图'
     watermarkText = title + ' Single-Core ' + authorInfo
     logoPath = 'logos.png'
     listPath = 'single_list.txt'
-    percent = [x for x in range(30, 311, 5)]
+    percent = [x for x in range(30, 341, 5)]
     
     intel_dict2 = {'i3': 3, 'i5': 1, 'i7': 2, 'i9': 3,
                 'Core2': 0, 'Pentium': 0, 'Celeron': 0, 
@@ -65,7 +65,7 @@ if coreType == 'single':
         # Node('AMD', 'R5', 'R5 3600XT', 1300, 'desktop'),
     ]
 else:  # multiCore
-    bench_version = r'Beta V0.6'
+    bench_version = r'Beta V0.7'
     baseScore = 1000
     parameter = [1.40299769e+03, - 1.79848915e+03, - 8.62352477e-01] # geekbench multi
     title = dataSource+'多核性能天梯图'

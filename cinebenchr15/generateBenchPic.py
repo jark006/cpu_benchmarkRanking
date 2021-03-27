@@ -20,7 +20,7 @@ from download_data import Node
 import math
 import random
 
-buildType = 'debugk'
+buildType = 'debugX'
 coreType = 'single'
 
 dataSource = r'CinebenchR15'
@@ -33,14 +33,15 @@ fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 
 
 if coreType == 'single':
-    bench_version = r'Beta V0.6'
+    bench_version = r'Beta V0.7'
     baseScore = 100
-    parameter = [3348.58915603, - 270.36700463, 83.38583544]  # R15 single
+    # parameter = [3348.58915603, - 270.36700463, 83.38583544]  # R15 single
+    parameter = [2.69789933e-02, 4.46235803e+01, 1.17556135e+03] # R15 single logistic
     title = dataSource+'单核性能天梯图'
     watermarkText = title + ' Single-Core ' + authorInfo
     logoPath = 'logos.png'
     listPath = 'single_list.txt'
-    percent = [x for x in range(70, 240, 5)]
+    percent = [x for x in range(50, 281, 5)]
     intel_dict2 = {'i3': 2, 'i5': 0, 'i7': 1, 'i9': 2,
                    'Core2': 0, 'Pentium': 0, 'Celeron': 1, 'Celeron2': 2, 'Atom': 0}
 
@@ -57,7 +58,7 @@ if coreType == 'single':
         # Node('AMD', 'R9', 'R9 3900XT', 7480, 'desktop'),
     ]
 else:
-    bench_version = r'Beta V0.6'
+    bench_version = r'Beta V0.7'
     baseScore = 500
     parameter = [1023.49296577, -396.78088766, 80.97501709]  # R15 multi
     title = dataSource+'多核性能天梯图'
@@ -95,8 +96,13 @@ pic_path = '../'+title + build_date + bench_version + '.png'
 
 
 
-# 效果不错
+# 曲线拟合
 def func(x, a, b, c):
+    if coreType == 'single':
+        return c/(1+b*np.exp(-a*x)) # s-curve logistics
+        # return c*np.exp(-b*np.exp(-a*x)) # s-curve Gomperty
+    
+    # multi
     return a * np.exp(b / x) + c
 
 
@@ -154,7 +160,8 @@ def score2high(x):
     a = p[0]
     b = p[1]
     c = p[2]
-    res = a * np.exp(b / x) + c
+    # res = a * np.exp(b / x) + c
+    res = func(x, a, b, c)
     return int(res * 0.5)
 
 

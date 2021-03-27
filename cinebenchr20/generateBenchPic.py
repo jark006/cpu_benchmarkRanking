@@ -20,7 +20,7 @@ from download_data import Node
 import math
 import random
 
-buildType = 'debugX'
+buildType = 'debug'
 coreType = 'single'
 
 dataSource = r'CinebenchR20'
@@ -33,14 +33,15 @@ fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 
 
 if coreType == 'single':
-    bench_version = r'Beta V0.6'
+    bench_version = r'Beta V0.7'
     baseScore = 200
-    parameter = [ 2.24473411e+03, -9.66584721e+02,  71.22222273e+00]  # R20 single
+    # parameter = [ 2.24473411e+03, -9.66584721e+02,  71.22222273e+00]  # R20 single
+    parameter = [9.03560270e-03, 3.93485579e+01, 6.55496501e+02] # R20 single logistic
     title = dataSource+'单核性能天梯图'
     watermarkText = title + ' Single-Core ' + authorInfo
     logoPath = 'logos.png'
     listPath = 'single_list.txt'
-    percent = [x for x in range(90, 355, 5)]
+    percent = [x for x in range(90, 331, 5)]
     
     intel_dict2 = {'i3': 2, 'i5': 0, 'i7': 1, 'i9': 2,
                    'Core2': 0, 'Pentium': 0, 'Celeron': 0,'Celeron2': 0, 'Atom': 2}
@@ -58,9 +59,10 @@ if coreType == 'single':
         # Node('AMD', 'R9', 'R9 3900XT', 7480, 'desktop'),
     ]
 else:
-    bench_version = r'Beta V0.6'
+    bench_version = r'Beta V0.7'
     baseScore = 1000
     parameter = [428.14658258, -1477.89941712,    82.43770669]  # R20 multi
+    # parameter =[ 5.56491059e-02,  1.24655569e+02, -3.08949965e+02]
     title = dataSource+'多核性能天梯图'
     watermarkText = title+' Multi-Core '+authorInfo
     logoPath = 'logom.png'
@@ -96,11 +98,19 @@ pic_path = '../'+title + build_date + bench_version + '.png'
 
 # 效果不错
 def func(x, a, b, c):
-    return a * np.exp(b / x) + c
+    if coreType == 'single':
+        # return a * np.exp(b / x) + c
+        return c/(1+b*np.exp(-a*x)) # s-curve logistics
+        # return c*np.exp(-b*np.exp(-a*x)) # s-curve Gomperty
+    else:
+        # return c/(1+b*np.exp(-a*x)) # s-curve logistics
+        # return c+(b*np.log(a*x)) 
+        return a * np.exp(b / x) + c
 
 
 def fit(x, y):
-    popt, pcov = curve_fit(func, x, y)
+    # popt, pcov = curve_fit(func, x, y, maxfev=50000,p0=(0, 0, 1900)) #Single
+    popt, pcov = curve_fit(func, x, y, maxfev=50000)#,p0=(0, 100, -300))
     print(popt)
     a = popt[0]  # popt里面是拟合系数
     b = popt[1]
@@ -113,7 +123,7 @@ def fit(x, y):
     plt.ylabel('High')
     plt.legend(loc=4)  # 指定legend的位置
     plt.title('curve_fit')
-    plt.savefig('all' + str(time.time()) + '.png')
+    plt.savefig(('single' if coreType=='single' else 'multi') + str(time.time()) + '.png')
     plt.show()
 
 
@@ -153,7 +163,8 @@ def score2high(x):
     a = p[0]
     b = p[1]
     c = p[2]
-    res = a * np.exp(b / x) + c
+    # res = a * np.exp(b / x) + c
+    res = func(x, a, b, c)
     return int(res * 0.5)
 
 
@@ -227,8 +238,8 @@ intel_list2 = []  # 移动平台
 amd_list = []
 
 # 拟合分数，将分数尽可能线性平均分布
-# y = [i for i in range(50, len(all_list)+50)]
-# x = [y.score for y in all_list]
+# y = [i+50 for i in range(0, len(all_list))]
+# x = [ele.score for ele in all_list]
 # x.sort()
 # fit(x, y)
 # exit()

@@ -1,4 +1,4 @@
-413
+431
 Intel
 Xeon
 W-3175X
@@ -105,9 +105,29 @@ W-3235
 5742
 desktop
 Intel
+i9
+i9-11900KF
+5725
+desktop
+Intel
+i9
+i9-11900K
+5725
+desktop
+Intel
 E5
 E5-2697 v4
 5697
+desktop
+Intel
+i7
+i7-11700KF
+5615
+desktop
+Intel
+i7
+i7-11700K
+5615
 desktop
 Intel
 Xeon
@@ -481,6 +501,16 @@ i7-10710U
 laptop
 Intel
 i3
+i3-10105F
+2337
+desktop
+Intel
+i3
+i3-10105
+2337
+desktop
+Intel
+i3
 i3-10300
 2330
 desktop
@@ -593,6 +623,11 @@ Intel
 i5
 i5-1038NG7
 1922
+laptop
+Intel
+i5
+i5-1135G7
+1868
 laptop
 Intel
 i7
@@ -904,6 +939,11 @@ i5
 i5-4670
 1245
 desktop
+Intel
+i7
+i7-3630QM
+1230
+laptop
 Intel
 i5
 i5-4590
@@ -1370,6 +1410,11 @@ TR 3990X
 24763
 desktop
 AMD
+TR
+TR PRO 3995WX
+24463
+desktop
+AMD
 EPYC
 Epyc 7742
 20644
@@ -1412,7 +1457,7 @@ desktop
 AMD
 R9
 R9 5950X
-10360
+10428
 desktop
 AMD
 TR
@@ -1427,7 +1472,7 @@ desktop
 AMD
 R9
 R9 5900X
-8168
+8468
 desktop
 AMD
 EPYC
@@ -1470,6 +1515,16 @@ R7 5800X
 5724
 desktop
 AMD
+R9
+R9 5900HX
+5536
+desktop
+AMD
+R7
+R7 5700G
+5465
+desktop
+AMD
 TR
 TR 1920X
 5326
@@ -1479,6 +1534,11 @@ R7
 R7 3800XT
 5122
 desktop
+AMD
+R7
+R7 5800H
+5051
+laptop
 AMD
 R7
 R7 3800X
@@ -1505,6 +1565,26 @@ Epyc 7351
 4728
 desktop
 AMD
+R5
+R5 5600X
+4562
+desktop
+AMD
+R9
+R9 5980HX
+4560
+desktop
+AMD
+R9
+R9 5980HS
+4546
+laptop
+AMD
+R5
+R5 5600G
+4511
+desktop
+AMD
 R7
 R7 4700GE
 4425
@@ -1515,15 +1595,25 @@ R9 4900H
 4332
 laptop
 AMD
+R7
+R7 PRO 5850U
+4320
+laptop
+AMD
+R7
+R7 5800U
+4320
+laptop
+AMD
 R9
 R9 4900HS
 4315
 laptop
 AMD
-R5
-R5 5600X
-4312
-desktop
+R9
+R9 5900HS
+4260
+laptop
 AMD
 R7
 R7 2700X
@@ -1565,14 +1655,14 @@ TR 1900X
 3678
 desktop
 AMD
+R5
+R5 PRO 4650G
+3616
+desktop
+AMD
 R7
 R7 1800X
 3587
-desktop
-AMD
-R5
-R5 PRO 4650G
-3473
 desktop
 AMD
 R7
@@ -1743,6 +1833,11 @@ AMD
 R7
 R7 3700U
 1515
+laptop
+AMD
+R3
+R3 4300U
+1502
 laptop
 AMD
 R5
@@ -1968,11 +2063,6 @@ AMD
 APU
 A4-3320M
 597
-laptop
-AMD
-R3
-R3 4300U
-559
 laptop
 AMD
 R3
