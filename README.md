@@ -1,7 +1,9 @@
 # CPU_benchmarkRanking
 
+Download the cpu benchmark data(single core & multi core) from `cpu-monkey.com` & `geekbench.com` and Generate to picture.
 
-## Windows10 + Python3
+---
+## Env: Windows10 + Python3
 
 You need change the value of var `fontFile `(path to fontfile:" xxx.ttc") to run on other systems.
 
@@ -39,20 +41,21 @@ Or run `download_r20.py` and `draw_r20.py `.
 ---
 # Date source：
 
-## CinebenchR15
-
+### CinebenchR15
 https://www.cpu-monkey.com/en/cpu_benchmark-cinebench_r15_single_core-7
 
 https://www.cpu-monkey.com/en/cpu_benchmark-cinebench_r15_multi_core-8
 
-
-## CinebenchR20
----
+### CinebenchR20
 https://www.cpu-monkey.com/en/cpu_benchmark-cinebench_r20_single_core-9
 
-https://www.cpu-monkey.com/en/cpu_benchmark-cinebench_r20_multi_core-10'
+https://www.cpu-monkey.com/en/cpu_benchmark-cinebench_r20_multi_core-10
 
-## Geekbench 5
-
+### Geekbench 5
 https://browser.geekbench.com/processor-benchmarks
 
+---
+---
+# Result
+
+![](pic/r15_single_v.8.png)
