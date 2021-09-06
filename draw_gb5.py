@@ -20,26 +20,26 @@ from myutil import *
 import math
 
 buildType = 'debugA'
-coreType = 'singleA'
+coreType = 'single'
 dataSource = r'Geekbench5'
 datalink = r'https://browser.geekbench.com/processor-benchmarks'
-authorInfo = r' 贴吧ID:泛感思杰 '
+authorInfo = r'贴吧ID:泛感思杰  jark006@qq.com'
 link = r'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg  提取码：etpt'
 
 fontFile = r'c:\windows\fonts\msyh.ttc'
 fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 highScale = 0.2 #高度比例
 pic_format = '.png'
-bench_version = r'Beta V0.8'
+bench_version = r'V1.0'
 
 if coreType == 'single':
     baseScore = 500
     parameter = [ 2.24473411e+03, -9.66584721e+02,  1.22222273e+00]  # geekbench single
     title = dataSource+'单核性能天梯图'
-    watermarkText = title + ' Single-Core ' + authorInfo
+    watermarkText = title + ' Single-Core'
     logoPath = r'pic/logoGB5s.png'
     listPath = r'data/gb5_single_list.txt'
-    percent = [x for x in range(40, 341, 10)]
+    percent = [x for x in range(40, 381, 10)]
     
     # 所有系列分成两列
     intel_Column_mobile = {
@@ -67,7 +67,7 @@ else:  # multiCore
     baseScore = 1000
     parameter = [1.40299769e+03, - 1.79848915e+03, - 8.62352477e-01] # geekbench multi
     title = dataSource+'多核性能天梯图'
-    watermarkText = title+' Multi-Core '+authorInfo
+    watermarkText = title+' Multi-Core'
     logoPath = r'pic/logoGB5m.png'
     listPath = r'data/gb5_multi_list.txt'
     percent = [
@@ -83,8 +83,8 @@ else:  # multiCore
     }
 
     intel_Column_desktop = {
-        'i3': 4, 'i5': 0, 'i7': 2, 'i9': 4, 'E5': 6, 'Xeon': 8,'Core2': 0,  'Pentium': 2,  'Celeron': 4, 
-        'i32': 5, 'i52': 1, 'i72': 3, 'i92': 5, 'E52': 7, 'Xeon2': 9,'Core22': 1,  'Pentium2': 3,  'Celeron2': 5, 
+        'E5': 0, 'Xeon': 2,'i3': 8, 'i5': 4, 'i7': 6, 'i9': 8, 'Core2': 4,  'Pentium': 6,  'Celeron': 8, 
+        'E52': 1, 'Xeon2': 3,'i32': 9, 'i52': 5, 'i72': 7, 'i92': 9, 'Core22': 5,  'Pentium2': 7,  'Celeron2': 9, 
     }
 
     amd_Column = {
@@ -217,9 +217,9 @@ for n in all_list:
     else:
         amd_all.append(n)
 
-print('Intel_list len:{}'.format(len(intel_desktop)))
-print('Intel_list2 len:{}'.format(len(intel_mobile)))
-print('AMD_list len:{}'.format(len(amd_all)))
+print('Intel_desktop len:{}'.format(len(intel_desktop)))
+print('Intel_mobile len:{}'.format(len(intel_mobile)))
+print('AMD_all len:{}'.format(len(amd_all)))
 
 # print(se)
 # print(se2)
@@ -329,7 +329,7 @@ img[:upEdgeHigh, amdOffset:] = (230, 0, 30, 255)
 img[-downEdgeHigh:, :] = (255, 127, 39, 255)
 
 img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGRA)
-logo = cv2.imread('pic/qr2.png', cv2.IMREAD_UNCHANGED)
+logo = cv2.imread('pic/qrcode.png', cv2.IMREAD_UNCHANGED)
 xOffset, yOffset = 30, 100
 for x in range(0, logo.shape[0]):
     for y in range(0, logo.shape[1]):
@@ -341,7 +341,7 @@ for x in range(0, logo.shape[0]):
 
 
 logo = cv2.imread(logoPath, cv2.IMREAD_UNCHANGED)
-xOffset2, yOffset2 = xOffset+180, yOffset
+xOffset2, yOffset2 = imgWidth-180, yOffset
 for x in range(0, logo.shape[0]):
     for y in range(0, logo.shape[1]):
         a = np.array(logo[x, y], dtype=int)
@@ -355,7 +355,7 @@ img_pil = Image.fromarray(img)
 draw = ImageDraw.Draw(img_pil)
 
 font = ImageFont.truetype(fontFilebd, size=28)
-draw.text((xOffset, yOffset+logo.shape[0]), '100%性能基准分:'+str(baseScore), font=font, fill='black')
+draw.text((xOffset, yOffset+logo.shape[0]+20), '100%性能基准分:'+str(baseScore), font=font, fill='black')
 
 # 绘制中间百分比
 textColor = (0, 0, 0)
@@ -427,7 +427,7 @@ draw.text((50, y), title, font=font, fill='white')
 draw.text((x + amdOffset, y), 'Build ' + build_date + '  ' + bench_version, font=font, fill='white')
 
 font = ImageFont.truetype(fontFile, size=25)
-draw.text((50, y + 40), r'主要数据来源:'+datalink, font=font, fill='white')
+draw.text((50, y + 40), r'数据源:'+datalink, font=font, fill='white')
 draw.text((x + amdOffset, y + 45), authorInfo, font=font, fill='white')
 
 
@@ -461,19 +461,25 @@ if buildType == 'debug':
 
 # 绘制水印层
 font = ImageFont.truetype(fontFile, size=24)
-w, h = font.getsize(link)
-watermask = np.zeros((imgHigh, imgHigh, 4), np.uint8)
+w, h = font.getsize(watermarkText)
+watermask = np.zeros((imgHigh, imgWidth*2, 4), np.uint8)
 watermask[:, :] = (0, 0, 0, 1)
 watermask_pil = Image.fromarray(watermask)
 draw = ImageDraw.Draw(watermask_pil)
-x, y = 30, 30
+x, y = 15, 15
 while y < imgHigh:
-    while x < imgHigh:
-        draw.text((x, y), watermarkText, font=font, fill='white')
-        draw.text((x, y + h), link, font=font, fill='white')
+    while x < imgWidth*2:
+        rd_color = HSL2RGB(int(random.random()*360),1, 0.75)
+
+        draw.text((x, y), watermarkText, font=font, fill=rd_color)
+        draw.text((x, y + h), authorInfo, font=font, fill=rd_color)
         x += int(1.6 * w)
     x = 15
     y += 8 * h
+
+# cv2.imshow('watermask',np.array(watermask_pil))
+# cv2.waitKey(0)
+# exit(-99)
 
 # 水印层旋转加裁切
 watermask = np.array(watermask_pil)
@@ -484,7 +490,7 @@ watermask = watermask[:, w:w + imgWidth]
 watermask = cv2.resize(watermask, (imgWidth, imgHigh), interpolation=cv2.INTER_AREA)
 
 img = np.array(img_pil)
-img = cv2.addWeighted(img, 1, watermask, 0.08, 0)  # 叠加水印层
+img = cv2.addWeighted(img, 1, watermask, 0.1, 0)  # 叠加水印层
 
 
 
@@ -497,4 +503,5 @@ img = cv2.addWeighted(img, 1, watermask, 0.08, 0)  # 叠加水印层
 cv2.imencode(pic_format, img)[1].tofile(pic_path)
 
 print(title+' is done.')
+print('Path: '+pic_path)
 

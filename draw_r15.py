@@ -17,30 +17,30 @@ import time
 import cv2
 from PIL import ImageFont, ImageDraw, Image
 from myutil import *
-import math
+import random
 
 buildType = 'debugA'
-coreType = 'singleA'
+coreType = 'single'
 dataSource = r'CinebenchR15'
 datalink = r'https://www.cpu-monkey.com/'
-authorInfo = r' 贴吧ID:泛感思杰 '
+authorInfo = r'贴吧ID:泛感思杰  jark006@qq.com'
 link = r'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg  提取码：etpt'
 
 fontFile = r'c:\windows\fonts\msyh.ttc'
 fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 highScale = 0.2 #高度比例
 pic_format = '.png'
-bench_version = r'Beta V0.8'
+bench_version = r'Beta V0.8.1'
 
 if coreType == 'single':
     baseScore = 100
     # parameter = [3348.58915603, - 270.36700463, 83.38583544]  # R15 single
     parameter = [2.69789933e-02, 4.46235803e+01, 1.17556135e+03] # R15 single logistic
     title = dataSource+'单核性能天梯图'
-    watermarkText = title + ' Single-Core ' + authorInfo
+    watermarkText = title + ' Single-Core'
     logoPath = 'pic/logoR15s.png'
     listPath = 'data/r15_single_list.txt'
-    percent = [x for x in range(40, 261, 10)]
+    percent = [x for x in range(40, 261, 10)]+[280]
 
     # 所有系列分成两列
     intel_Column_mobile = {
@@ -68,7 +68,7 @@ else:
     baseScore = 500
     parameter = [1023.49296577, -396.78088766, 80.97501709]  # R15 multi
     title = dataSource+'多核性能天梯图'
-    watermarkText = title+' Multi-Core '+authorInfo
+    watermarkText = title+' Multi-Core'
     logoPath = 'pic/logoR15m.png'
     listPath = 'data/r15_multi_list.txt'
     percent = [
@@ -220,9 +220,9 @@ for n in all_list:
     else:
         amd_all.append(n)
 
-print('intel_desktop len:{}'.format(len(intel_desktop)))
-print('intel_mobile len:{}'.format(len(intel_mobile)))
-print('amd_all len:{}'.format(len(amd_all)))
+print('Intel_desktop len:{}'.format(len(intel_desktop)))
+print('Intel_mobile len:{}'.format(len(intel_mobile)))
+print('AMD_all len:{}'.format(len(amd_all)))
 
 # print(se)
 # print(se2)
@@ -332,7 +332,7 @@ img[:upEdgeHigh, amdOffset:] = (230, 0, 30, 255)
 img[-downEdgeHigh:, :] = (255, 127, 39, 255)
 
 img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGRA)
-logo = cv2.imread('pic/qr2.png', cv2.IMREAD_UNCHANGED)
+logo = cv2.imread('pic/qrcode.png', cv2.IMREAD_UNCHANGED)
 xOffset, yOffset = 30, 100
 for x in range(0, logo.shape[0]):
     for y in range(0, logo.shape[1]):
@@ -344,7 +344,7 @@ for x in range(0, logo.shape[0]):
 
 
 logo = cv2.imread(logoPath, cv2.IMREAD_UNCHANGED)
-xOffset2, yOffset2 = xOffset+180, yOffset
+xOffset2, yOffset2 = imgWidth-180, yOffset
 for x in range(0, logo.shape[0]):
     for y in range(0, logo.shape[1]):
         a = np.array(logo[x, y], dtype=int)
@@ -429,8 +429,8 @@ x, y = 50, imgHigh - 85
 draw.text((50, y), title, font=font, fill='white')
 draw.text((x + amdOffset, y), 'Build ' + build_date + '  ' + bench_version, font=font, fill='white')
 
-font = ImageFont.truetype(fontFile, size=25)
-draw.text((50, y + 40), r'主要数据来源:'+datalink, font=font, fill='white')
+font = ImageFont.truetype(fontFile, size=24)
+draw.text((50, y + 40), r'数据源:'+datalink, font=font, fill='white')
 draw.text((x + amdOffset, y + 45), authorInfo, font=font, fill='white')
 
 
@@ -464,19 +464,25 @@ if buildType == 'debug':
 
 # 绘制水印层
 font = ImageFont.truetype(fontFile, size=24)
-w, h = font.getsize(link)
-watermask = np.zeros((imgHigh, imgHigh, 4), np.uint8)
+w, h = font.getsize(watermarkText)
+watermask = np.zeros((imgHigh, imgWidth*2, 4), np.uint8)
 watermask[:, :] = (0, 0, 0, 1)
 watermask_pil = Image.fromarray(watermask)
 draw = ImageDraw.Draw(watermask_pil)
-x, y = 30, 30
+x, y = 15, 15
 while y < imgHigh:
-    while x < imgHigh:
-        draw.text((x, y), watermarkText, font=font, fill='white')
-        draw.text((x, y + h), link, font=font, fill='white')
+    while x < imgWidth*2:
+        rd_color = HSL2RGB(int(random.random()*360),1, 0.75)
+
+        draw.text((x, y), watermarkText, font=font, fill=rd_color)
+        draw.text((x, y + h), authorInfo, font=font, fill=rd_color)
         x += int(1.6 * w)
     x = 15
     y += 8 * h
+
+# cv2.imshow('watermask',np.array(watermask_pil))
+# cv2.waitKey(0)
+# exit(-99)
 
 # 水印层旋转加裁切
 watermask = np.array(watermask_pil)
@@ -487,7 +493,7 @@ watermask = watermask[:, w:w + imgWidth]
 watermask = cv2.resize(watermask, (imgWidth, imgHigh), interpolation=cv2.INTER_AREA)
 
 img = np.array(img_pil)
-img = cv2.addWeighted(img, 1, watermask, 0.08, 0)  # 叠加水印层
+img = cv2.addWeighted(img, 1, watermask, 0.1, 0)  # 叠加水印层
 
 
 
@@ -500,4 +506,5 @@ img = cv2.addWeighted(img, 1, watermask, 0.08, 0)  # 叠加水印层
 cv2.imencode(pic_format, img)[1].tofile(pic_path)
 
 print(title+' is done.')
+print('Path: '+pic_path)
 
