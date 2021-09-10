@@ -1,7 +1,7 @@
 
 <font color=#A52A2A size=6>CinebenchR15_R20系列停更说明</font>
 
-由于https://www.cpu-monkey.com不再开放全部CPU数据，只开放最高性能的250款CPU数据。故暂时停更。
+由于 https://www.cpu-monkey.com 不再开放全部CPU数据，只开放最高性能的250款CPU数据。故暂时停更。
 以后有可能只做250款CPU的图，也许不做，如果有更好数据源就做。
 
 # CPU_benchmarkRanking
