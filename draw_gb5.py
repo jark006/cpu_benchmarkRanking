@@ -23,14 +23,14 @@ buildType = 'debugA'
 coreType = 'single'
 dataSource = r'Geekbench5'
 datalink = r'https://browser.geekbench.com/processor-benchmarks'
-authorInfo = r'贴吧ID:泛感思杰  jark006@qq.com'
+authorInfo = r'贴吧:泛感思杰  jark006@qq.com'
 link = r'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg  提取码：etpt'
 
 fontFile = r'c:\windows\fonts\msyh.ttc'
 fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
 highScale = 0.2 #高度比例
 pic_format = '.png'
-bench_version = r'V1.0'
+bench_version = r'V1.1'
 
 if coreType == 'single':
     baseScore = 500
