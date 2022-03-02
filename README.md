@@ -13,15 +13,14 @@ Download the cpu benchmark data(single core & multi core) from `cpu-monkey.com` 
 
 You need change the value of var `fontFile `(path to fontfile:" xxx.ttc") to run on other systems.
 
-Lib request: ` OpenCV, BeautifulSoup, numpy, matplotlib, scipy, PIL ` 
+Lib request: ` numpy, scipy, matplotlib, OpenCV, BeautifulSoup, Pillow ` 
 
 ``` sh
-python3 -m pip install --upgrade pip
-pip install numpy
-pip install scipy
-pip install matplotlib
-pip install opencv-python
-pip install beautifulsoup4
+python -m pip install --upgrade pip
+pip install numpy scipy matplotlib opencv-python beautifulsoup4 pillow
+
+# 速度慢就用临时阿里云代理
+pip install -i https://mirrors.aliyun.com/pypi/simple/ numpy scipy matplotlib opencv-python beautifulsoup4 pillow
 ```
 ___
 ## For Geekbench5:

@@ -1,5 +1,6 @@
 
 output/*
-data/*
+data/*.txt
+data/*.html
 __pycache__
 

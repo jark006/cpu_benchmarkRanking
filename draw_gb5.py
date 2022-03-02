@@ -1,6 +1,6 @@
 '''
  jark006
- date： 2021-4-28
+ date: 2021-4-28
  jark006@qq.com
 
  Explanation:
@@ -19,27 +19,29 @@ from PIL import ImageFont, ImageDraw, Image
 from myutil import *
 import math
 
-buildType = 'debugA'
+buildType = 'debuga'
 coreType = 'single'
 dataSource = r'Geekbench5'
 datalink = r'https://browser.geekbench.com/processor-benchmarks'
 authorInfo = r'贴吧:泛感思杰  jark006@qq.com'
-link = r'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg  提取码：etpt'
+link = r'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg  提取码: etpt'
 
 fontFile = r'c:\windows\fonts\msyh.ttc'
 fontFilebd = r'c:\windows\fonts\msyhbd.ttc'
-highScale = 0.2 #高度比例
 pic_format = '.png'
-bench_version = r'V1.1'
+bench_version = r'V1.3'
 
 if coreType == 'single':
-    baseScore = 500
-    parameter = [ 2.24473411e+03, -9.66584721e+02,  1.22222273e+00]  # geekbench single
+    highScale = 1.2 #高度比例
+    fixOffset = 40
+    baseScore = 1000
+    # parameter = [ 2.24473411e+03, -9.66584721e+02,  1.22222273e+00]  # geekbench single
+    parameter = [ 399.3926221795527, -1476.1098914481624, 2.7568419324427853 ]
     title = dataSource+'单核性能天梯图'
     watermarkText = title + ' Single-Core'
     logoPath = r'pic/logoGB5s.png'
     listPath = r'data/gb5_single_list.txt'
-    percent = [x for x in range(40, 381, 10)]
+    percent = [x for x in range(20, 160, 5)]+[x for x in range(160, 211, 10)]
     
     # 所有系列分成两列
     intel_Column_mobile = {
@@ -64,17 +66,21 @@ if coreType == 'single':
         # Node('AMD', 'R9', 'R9 3900XT', 1350, 'desktop'),
     ]
 else:  # multiCore
-    baseScore = 1000
+    highScale = 0.2 #高度比例
+    fixOffset = 0
+    baseScore = 2000
     parameter = [1.40299769e+03, - 1.79848915e+03, - 8.62352477e-01] # geekbench multi
     title = dataSource+'多核性能天梯图'
     watermarkText = title+' Multi-Core'
     logoPath = r'pic/logoGB5m.png'
     listPath = r'data/gb5_multi_list.txt'
-    percent = [
-        40,  50,  60, 70,  80,  90,  100,  110,  120, 130, 140, 150, 160, 170, 180, 190, 200,
-        220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 450, 500, 550, 600, 650, 700, 750, 800,
-        900, 1000, 1200, 1400, 1600, 2000, 2500, 3000
-    ]
+    percent = \
+        [i for i in range(20,  100+1,5)]+\
+        [i for i in range(110, 200+1,10)]+\
+        [i for i in range(200, 300+1,20)]+\
+        [i for i in range(300, 500+1,50)]+\
+        [600, 700, 800, 1000, 1200, 1500]
+    
 
     # 所有系列分成两列
     intel_Column_mobile = {
@@ -104,30 +110,6 @@ build_date = time.strftime("%Y%m%d", time.localtime())
 pic_path = 'output/'+title + build_date + bench_version+pic_format
 
 
-
-# 效果不错
-def func(x, a, b, c):
-    return a * np.exp2(b / x) + c
-
-
-def fit(x, y):
-    popt, pcov = curve_fit(func, x, y)
-    print(popt)
-    a = popt[0]  # popt里面是拟合系数
-    b = popt[1]
-    c = popt[2]
-    y1 = [func(i, a, b, c) for i in x]
-
-    plt.plot(x, y, '.', label='original values')
-    plt.plot(x, y1, 'r', label='y1')
-    plt.xlabel('CPU score')
-    plt.ylabel('High')
-    plt.legend(loc=4)  # 指定legend的位置
-    plt.title('curve_fit')
-    plt.savefig(dataSource+('single' if coreType=='single' else 'multi') + str(int(time.time())) + '.png')
-    plt.show()
-
-
 def readlist(path):
     boollist = {'i3': True, 'i5': True, 'i7': True, 'i9': True, 'E5': True, 'Xeon': True,
                 'Core2': True,  'Pentium': True,'Celeron': True, 'Atom':True,
@@ -153,11 +135,10 @@ def readlist(path):
 
 
 def score2high(p, x, highScale):
-    # y= a*np.exp(b/x)+c
-    a = p[0]
-    b = p[1]
-    c = p[2]
-    res = a * np.exp(b / x) + c
+    if coreType == 'single' and x>baseScore*1.4: # 12代单核有点高，从140%性能的开始自乘1.0, 线性到200%自乘0.9,
+        x=x*(37/30.0-(x/baseScore)/6)
+
+    res = func(x, p[0], p[1],p[2])
     return int(res*highScale)
 
 all_list = readlist(listPath)
@@ -165,25 +146,44 @@ intel_desktop = []  # 桌面平台
 intel_mobile = []  # 移动平台
 amd_all = []
 
-# 拟合分数，将分数尽可能线性平均分布
-# y = [i for i in range(50, len(all_list)+50)]
-# x = [y.score for y in all_list]
-# x.sort()
-# fit(x, y)
-# exit()
 
-# y = [i for i in range(60, len(all_list)+70)]  # 前加10个
-# x = [y.score for y in all_list]
+# 效果不错
+def func(x, a, b, c):
+    # if coreType == 'single':
+    #     return a * np.arctan(b / x) + c
+    # else:
+    #     return a * np.exp2(b / x) + c
+    x=x+fixOffset
+    return a * np.exp2(b / x) + c
+
+def fit(x, y):
+    popt, pcov = curve_fit(func, x, y)
+    print('[ {}, {}, {} ]'.format(popt[0], popt[1], popt[2]))
+    y1 = [func(i, popt[0], popt[1], popt[2]) for i in x]
+    # 支持中文
+    plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+    plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+    plt.plot(x, y,  '.', label='原始离散值')
+    plt.plot(x, y1, 'r', label='拟合曲线')
+    plt.xlabel('CPU score')
+    plt.ylabel('High')
+    plt.legend(loc=4)  # 指定legend的位置
+    plt.title('拟合结果')
+    # plt.savefig(dataSource+('single' if coreType=='single' else 'multi') + str(int(time.time())) + '.png')
+    plt.show()
+
+
+# Begin -------------------拟合分数，将分数尽可能线性平均分布-------------------
+# x=list()
+# x.append(all_list[0].score+fixOffset)
+# for y in all_list:
+#     if x[-1]> y.score+4+fixOffset: # 间隔取值，区段扎堆数据导致两极数据拟合差距大
+#         x.append(y.score+fixOffset)
 # x.sort()
-# k = 10/(x[9]-x[0])
-# b = 60 - k*x[0]
-# l = []
-# for i in range(50, 60):
-#     print((i-b)/k)
-#     l.append((i-b)/k)
-# x = l+x
+# y = range(len(x))
 # fit(x, y)
 # exit()
+# End -------------------拟合分数，将分数尽可能线性平均分布--------------------
 
 
 for i in more:
@@ -221,9 +221,6 @@ print('Intel_desktop len:{}'.format(len(intel_desktop)))
 print('Intel_mobile len:{}'.format(len(intel_mobile)))
 print('AMD_all len:{}'.format(len(amd_all)))
 
-# print(se)
-# print(se2)
-# exit()
 
 # intel 移动端 高度修正
 sslist2 = []
@@ -284,10 +281,13 @@ for n in amd_all:
 
 for n in intel_mobile:
     n.highFix -= highMIN-2
+    n.high -= highMIN-2
 for n in intel_desktop:
     n.highFix -= highMIN-2
+    n.high -= highMIN-2
 for n in amd_all:
     n.highFix -= highMIN-2
+    n.high -= highMIN-2
 
 highMAX += 4
 
@@ -383,11 +383,15 @@ textColor = (220, 0, 0)
 for n in intel_mobile:
     x = int(intel_Column_mobile[n.series]) * seriesWidth + intelOffset2 + 5
     y = int(imgHigh - downEdgeHigh - n.highFix * textHigh)
+    # if n.high != n.highFix: # 附加修正位置时，被迫下降的高度
+    #     n.name=n.name+' ^'+str(n.high - n.highFix)
     draw.text((x, y), n.name, font=font, fill=textColor)
 
 for n in intel_desktop:
     x = (int(intel_Column_desktop[n.series])) * seriesWidth + intelOffset + 5
     y = int(imgHigh - downEdgeHigh - n.highFix * textHigh)
+    # if n.high != n.highFix:
+    #     n.name=n.name+' ^'+str(n.high - n.highFix)
     draw.text((x, y), n.name, font=font, fill=textColor)
 
 textColor = (0, 0, 220)
@@ -395,6 +399,8 @@ text_bg = (180, 200, 255)
 for n in amd_all:
     x = amdOffset + int(amd_Column[n.series]) * seriesWidth_amd + 5
     y = int(imgHigh - downEdgeHigh - n.highFix * textHigh)
+    # if n.high != n.highFix:
+    #     n.name=n.name+' ^'+str(n.high - n.highFix)
 
     # 文字背景
     if n.platform == 'laptop':
@@ -406,15 +412,15 @@ for n in amd_all:
 
 
 font = ImageFont.truetype(fontFilebd, size=30)
-text = 'Intel Mobile'
+text = 'Intel移动端'
 w, h = font.getsize(text)
 x, y = (intelOffset-w)/2, (100-h)/2
 draw.text((x, y), text, font=font, fill='white')
-text = 'Intel Desktop & Server'
+text = 'Intel桌面及服务器端'
 w, h = font.getsize(text)
 x, y = intelOffset+(centerOffset-intelOffset-w)/2, (100-h)/2
 draw.text((intelOffset2 + x, y), text, font=font, fill='white')
-text = 'AMD All Series'
+text = 'AMD全系列(移动端为浅红底色)'
 w, h = font.getsize(text)
 x, y = amdOffset+(imgWidth-amdOffset-w)/2, (100-h)/2
 draw.text((intelOffset2 + x, y), text, font=font, fill='white')
