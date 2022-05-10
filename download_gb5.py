@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
-from myutil import Node
+from myutil import *
 import urllib.request
-import sys
 
 url = r'https://browser.geekbench.com/processor-benchmarks'
 htmlPath = r'data/geekbench5.html'
@@ -14,7 +13,7 @@ path = [
 def download2htmlfile(url1, p):
     print('Download ... {}'.format(url1))
     headers = {
-        'User-Agent': 'Chrome/55.0.2883.87'}
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36'}
     req = urllib.request.Request(url=url1, headers=headers)
     res = urllib.request.urlopen(req)
     html = res.read().decode('utf-8')
@@ -60,247 +59,250 @@ def rawlist_depart(name_list, score_list):
     for i in range(0, len(name_list)):
         cpu_platform = 'unkown'
         cpu_series = ''
-        s = str(name_list[i])
-        s = s.replace('Microsoft Surface Edition', '')
-        s = s.replace('Black Edition', '')
-
-        if 'Intel' in s:
+        orgName = str(name_list[i])
+        orgName = orgName.replace('Microsoft Surface Edition', '')
+        orgName = orgName.replace('Black Edition', '')
+        reduceName = ''
+        if 'Intel' in orgName:
             # if ('m3-' in s) or ('m5-' in s) or ('m7-' in s) or ('M-' in s) or ('Atom' in s):
             #     # print(s + ' ' + str(sys._getframe().f_lineno))
             #     unsupport(s)
             #     continue
 
             try:
-                if ('m3-' in s) or ('m5-' in s) or ('m7-' in s) or ('M-' in s):
-                    ss = s[s.index('-') - 2:]
-                    ss = ss.strip(' ')
+                if ('m3-' in orgName) or ('m5-' in orgName) or ('m7-' in orgName) or ('M-' in orgName):
+                    reduceName = orgName[orgName.index('-') - 2:]
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Atom'
                     cpu_platform = 'laptop'
-                elif 'Atom' in s:
-                    ss = s[s.index('Atom'):]
-                    ss = ss.replace('Atom', '')
-                    ss = ss.strip(' ')
+                elif 'Atom' in orgName:
+                    reduceName = orgName[orgName.index('Atom'):]
+                    reduceName = reduceName.replace('Atom', '')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Atom'
                     cpu_platform = 'laptop'
-                elif 'Core 2' in s:
-                    ss = s[s.index('Core 2'):]
-                    ss = ss.replace('Core 2', '')
-                    ss = ss.replace('Extreme', '')
-                    ss = ss.replace('Quad', '')
-                    ss = ss.replace('Duo', '')
-                    ss = ss.strip(' ')
+                elif 'Core 2' in orgName:
+                    reduceName = orgName[orgName.index('Core 2'):]
+                    reduceName = reduceName.replace('Core 2', '')
+                    reduceName = reduceName.replace('Extreme ', 'Extreme-')
+                    reduceName = reduceName.replace('Quad ', 'Quad-')
+                    reduceName = reduceName.replace('Duo ', 'Duo-')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Core2'
                     cpu_platform = 'desktop'
-                elif 'Core ' in s:
-                    if 'i9' in s:
+                elif 'Core ' in orgName:
+                    if 'i9' in orgName:
                         cpu_series = 'i9'
-                    elif 'i7' in s:
+                    elif 'i7' in orgName:
                         cpu_series = 'i7'
-                    elif 'i5' in s:
+                    elif 'i5' in orgName:
                         cpu_series = 'i5'
-                    elif 'i3' in s:
+                    elif 'i3' in orgName:
                         cpu_series = 'i3'
-                    elif 'i4' in s:
-                        s = s.replace('i4', 'i5')
+                    elif 'i4' in orgName:
+                        orgName = orgName.replace('i4', 'i5')
                         cpu_series = 'i5'
                     else:
                         # print(s + ' ' + str(sys._getframe().f_lineno))
-                        unsupport(s)
+                        unsupport(orgName)
                         continue
-                    ss = s[s.index('i'):]
-                    ss = ss.strip(' ')
+                    reduceName = orgName[orgName.index('i'):]
+                    reduceName = reduceName.strip(' ')
                     cpu_platform = 'desktop'
-                elif 'Pentium' in s:
-                    ss = s[s.index('Pentium'):]
-                    ss = ss.replace('Pentium', ' ')
-                    ss = ss.replace('Gold', ' ')
-                    ss = ss.replace('Silver', ' ')
+                elif 'Pentium' in orgName:
+                    reduceName = orgName[orgName.index('Pentium'):]
+                    reduceName = reduceName.replace('Pentium', ' ')
+                    reduceName = reduceName.replace('Gold', ' ')
+                    reduceName = reduceName.replace('Silver', ' ')
 
-                    ss = ss.strip(' ')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Pentium'
                     cpu_platform = 'desktop'
-                elif 'Celeron' in s:
-                    ss = s[s.index('Celeron'):]
-                    ss = ss.replace('Celeron', '')
-                    ss = ss.replace('Gold', '')
-                    ss = ss.strip(' ')
+                elif 'Celeron' in orgName:
+                    reduceName = orgName[orgName.index('Celeron'):]
+                    reduceName = reduceName.replace('Celeron', '')
+                    reduceName = reduceName.replace('Gold', '')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Celeron'
                     cpu_platform = 'desktop'
-                elif 'Xeon' in s:
-                    ss = s[s.index('Xeon'):]
-                    ss = ss.replace('Xeon', '')
-                    ss = ss.replace('Processor', '')
-                    ss = ss.strip(' ')
+                elif 'Xeon' in orgName:
+                    reduceName = orgName[orgName.index('Xeon'):]
+                    reduceName = reduceName.replace('Xeon', '')
+                    reduceName = reduceName.replace('Processor', '')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Xeon'
-                    if 'E5-' in s:
+                    if 'E5-' in orgName:
                         cpu_series = 'E5'
                     cpu_platform = 'desktop'
                 else:
 
-                    print(s + ' ' + str(sys._getframe().f_lineno))
-                    unsupport(s)
+                    # print(orgName + ' ' + str(sys._getframe().f_lineno))
+                    unsupport(orgName)
                     continue
             except Exception:
                 # print("ERROR:" + s)
-                print(s + ' ' + str(sys._getframe().f_lineno))
-                unsupport(s)
+                # print(orgName + ' ' + str(sys._getframe().f_lineno))
+                unsupport(orgName)
                 continue
 
-            if len(ss) > 14:
+            if len(reduceName) < 3 or len(reduceName) > 14:
                 # print(ss+' is too long.')
-                print(s + ' ' + str(sys._getframe().f_lineno))
-                unsupport(s)
+                # print(orgName + ' ' + str(sys._getframe().f_lineno))
+                unsupport(orgName)
                 continue
 
-            if ('U' in ss) or ('M' in ss) or ('H' in ss) or ('EQ' in ss) or ('QE' in ss) or ('Y' in ss):
+            if(len(reduceName) < 4):
+                continue
+
+            if ('U' in reduceName) or ('M' in reduceName) or ('H' in reduceName) or ('EQ' in reduceName) or ('QE' in reduceName) or ('Y' in reduceName):
                 cpu_platform = 'laptop'
 
             if cpu_series == 'Xeon':
                 cpu_platform = 'desktop'
 
-            if(len(ss) == 0):
-                continue
-
-            if ss[0] == 'i' and (ss[-1] == 'G' or ss[-2] == 'G'):
+            if reduceName[-3] == 'G' and reduceName[-1] == 'E':
                 cpu_platform = 'laptop'
 
-            intel_list.append(Node('Intel', cpu_series, ss, score_list[i], cpu_platform))
+            if reduceName[0] == 'i' and (reduceName[-1] == 'G' or reduceName[-2] == 'G'):
+                cpu_platform = 'laptop'
+
+            intel_list.append(Node('Intel', cpu_series, reduceName, score_list[i], cpu_platform))
 
         else:
-            if ('Opteron' in s) or ('Embedded' in s):
+            
+            if ('Opteron' in orgName)  or ('Sempron' in orgName) : #or ('AMD E1-' in s) or ('AMD E2-' in s)or ('AMD E-' in s) or ('AMD C-' in s):
                 # print(s + ' ' + str(sys._getframe().f_lineno))
-                unsupport(s)
-                continue
-            if ('Opteron' in s) or ('Dual Core' in s) or ('Quad Core' in s):
-                # print(s + ' ' + str(sys._getframe().f_lineno))
-                unsupport(s)
+                # unsupport(s)
+                reduceName = orgName.replace('AMD ', '')
+                amd_list.append(Node('AMD', 'other', reduceName, score_list[i], 'desktop'))
                 continue
 
             # s = s.replace('PRO', '')
-            s = s.replace('APU', '')
+            orgName = orgName.replace('APU', '')
 
             try:
-                if 'EPYC' in s:
-                    ss = s[s.index('EPYC'):]
-                    ss = ss.replace('EPYC', '')
-                    ss = ss.strip(' ')
+                if 'EPYC' in orgName:
+                    reduceName = orgName[orgName.index('EPYC'):]
+                    reduceName = reduceName.replace('EPYC', '')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'EPYC'
-                    ss = cpu_series + ' ' + ss
-                elif 'Ryzen Threadripper' in s:
-                    ss = s[s.index('Threadripper'):]
-                    ss = ss.replace('Threadripper', 'TR')
-                    ss = ss.strip(' ')
+                    reduceName = cpu_series + ' ' + reduceName
+                elif 'Ryzen Threadripper' in orgName:
+                    reduceName = orgName[orgName.index('Threadripper'):]
+                    reduceName = reduceName.replace('Threadripper', 'TR')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'TR'
-                elif 'Ryzen 9' in s:
-                    ss = s[s.index('Ryzen'):]
-                    ss = ss.replace('Ryzen 9', 'R9')
-                    ss = ss.strip(' ')
+                elif 'Ryzen 9' in orgName:
+                    reduceName = orgName[orgName.index('Ryzen'):]
+                    reduceName = reduceName.replace('Ryzen 9', 'R9')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'R9'
-                elif 'Ryzen 7' in s:
-                    ss = s[s.index('Ryzen'):]
-                    ss = ss.replace('Ryzen 7', 'R7')
-                    ss = ss.strip(' ')
+                elif 'Ryzen 7' in orgName:
+                    reduceName = orgName[orgName.index('Ryzen'):]
+                    reduceName = reduceName.replace('Ryzen 7', 'R7')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'R7'
-                elif 'Ryzen 5' in s:
-                    ss = s[s.index('Ryzen'):]
-                    ss = ss.replace('Ryzen 5', 'R5')
-                    ss = ss.strip(' ')
+                elif 'Ryzen 5' in orgName:
+                    reduceName = orgName[orgName.index('Ryzen'):]
+                    reduceName = reduceName.replace('Ryzen 5', 'R5')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'R5'
-                elif 'Ryzen 3' in s:
-                    ss = s[s.index('Ryzen'):]
-                    ss = ss.replace('Ryzen 3', 'R3')
-                    ss = ss.strip(' ')
+                elif 'Ryzen 3' in orgName:
+                    reduceName = orgName[orgName.index('Ryzen'):]
+                    reduceName = reduceName.replace('Ryzen 3', 'R3')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'R3'
 
-                elif 'FX' in s:
-                    ss = s[s.index('FX'):]
-                    ss = ss.replace('Eight-Core', '')
-                    ss = ss.replace('Six-Core', '')
-                    ss = ss.replace('Quad-Core', '')
-                    ss = ss.strip(' ')
+                elif 'FX' in orgName:
+                    reduceName = orgName[orgName.index('FX'):]
+                    reduceName = reduceName.replace('Eight-Core', '')
+                    reduceName = reduceName.replace('Six-Core', '')
+                    reduceName = reduceName.replace('Quad-Core', '')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'Bulldozer'
-                elif 'A12' in s:
-                    ss = s[s.index('A12'):]
-                    ss = ss.strip(' ')
+                elif 'A12' in orgName:
+                    reduceName = orgName[orgName.index('A12'):]
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'APU'
-                elif 'A10' in s:
-                    ss = s[s.index('A10'):]
-                    ss = ss.strip(' ')
+                elif 'A10' in orgName:
+                    reduceName = orgName[orgName.index('A10'):]
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'APU'
-                elif 'A8' in s:
-                    ss = s[s.index('A8'):]
-                    ss = ss.strip(' ')
+                elif 'A8' in orgName:
+                    reduceName = orgName[orgName.index('A8'):]
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'APU'
-                elif 'A6' in s:
-                    ss = s[s.index('A6'):]
-                    ss = ss.strip(' ')
+                elif 'A6' in orgName:
+                    # reduceName = orgName[orgName.index('A6'):]
+                    reduceName = orgName.replace('AMD ', '')
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'APU'
-                elif 'A4' in s:
-                    ss = s[s.index('A4'):]
-                    ss = ss.strip(' ')
+                elif 'A4' in orgName:
+                    reduceName = orgName[orgName.index('A4'):]
+                    reduceName = reduceName.strip(' ')
                     cpu_series = 'APU'
-                elif 'Turion' in s:
-                    ss = s[s.index('Turion'):]
-                    ss = ss.replace('Turion 64', '')
-                    ss = ss.replace('Turion ', '')
-                    ss = ss.strip()
+                elif 'Turion' in orgName:
+                    reduceName = orgName[orgName.index('Turion'):]
+                    reduceName = reduceName.replace('Turion 64', '')
+                    reduceName = reduceName.replace('Turion ', '')
+                    reduceName = reduceName.strip()
                     cpu_series = 'Turion'
-                elif 'Athlon' in s:
-                    ss = s[s.index('Athlon'):]
-                    ss = ss.replace('Athlon 64', '')
-                    ss = ss.replace('Athlon ', '')
-                    ss = ss.strip()
+                elif 'Athlon' in orgName:
+                    reduceName = orgName[orgName.index('Athlon'):]
+                    reduceName = reduceName.replace('Athlon 64', '')
+                    reduceName = reduceName.replace('Athlon ', '')
+                    reduceName = reduceName.strip()
                     cpu_series = 'Athlon'
-                elif 'Phenom' in s:
-                    ss = s[s.index('Phenom'):]
-                    ss = ss.replace('Phenom ', '')
+                elif 'Phenom' in orgName:
+                    reduceName = orgName[orgName.index('Phenom'):]
+                    reduceName = reduceName.replace('Phenom ', '')
                     # ss = ss.replace('Quad-Core', '')
                     # ss = ss.replace('Triple-Core', '')
                     # ss = ss.replace('Dual-Core', '')
-                    ss = ss.strip()
+                    reduceName = reduceName.strip()
                     cpu_series = 'Phenom'
                 else:
-                    print(s + ' ' + str(sys._getframe().f_lineno))
-                    unsupport(s)
+                    # print(orgName + ' ' + str(sys._getframe().f_lineno))
+                    unsupport(orgName)
                     continue
                 cpu_platform = 'desktop'
             except Exception:
-                print(s + ' ' + str(sys._getframe().f_lineno))
-                unsupport(s)
+                # print(orgName + ' ' + str(sys._getframe().f_lineno))
+                unsupport(orgName)
                 continue
 
-            if len(ss) > 14:
-                print(ss+' is too long.')
-                print(s + ' ' + str(sys._getframe().f_lineno))
-                unsupport(s)
+            if len(reduceName) < 3 or len(reduceName) > 14:
+                # print(reduceName+' is too long.')
+                # print(orgName + ' ' + str(sys._getframe().f_lineno))
+                unsupport(orgName)
                 continue
 
-            if ('U' in ss) or ('H' in ss) or ('M' in ss) or ('N' in ss) or ('B' in ss):
+            if ('U' in reduceName) or ('H' in reduceName) or ('M' in reduceName) or ('N' in reduceName) or ('B' in reduceName):
                 cpu_platform = 'laptop'
-            if ('P' in ss) and ('PRO' not in ss):
+            if ('P' in reduceName) and ('PRO' not in reduceName):
                 cpu_platform = 'laptop'
-            if ('EPYC' in ss):
+            if ('EPYC' in reduceName):
                 cpu_platform = 'desktop'
 
-            if(len(ss) == 0):
+            if(len(reduceName) == 0):
                 continue
 
-            amd_list.append(Node('AMD', cpu_series, ss, score_list[i], cpu_platform))
+            amd_list.append(Node('AMD', cpu_series, reduceName, score_list[i], cpu_platform))
 
-    print('Total CPU list len:{}'.format(len(name_list)))
-    print('Intel_list len:{}'.format(len(intel_list)))
-    print('AMD_list len:{}'.format(len(amd_list)))
-    print('Unspport_list len:{}'.format(len(unsupport_list)))
+    # print('Total CPU list len:{}'.format(len(name_list)))
+    # print('Intel_list len:{}'.format(len(intel_list)))
+    # print('AMD_list len:{}'.format(len(amd_list)))
+    # print('Unspport_list len:{}'.format(len(unsupport_list)))
 
     return intel_list, amd_list
 
 
 def save_list(path1, intel_list, amd_list):
-    all_list = []
-    for i in intel_list:
-        all_list.append(i)
-    for i in amd_list:
-        all_list.append(i)
+    all_list = intel_list + amd_list
+    # for i in intel_list:
+    #     all_list.append(i)
+    # for i in amd_list:
+    #     all_list.append(i)
 
     f = open(path1, 'w')
     f.writelines(str(len(all_list)) + '\n')
@@ -313,26 +315,97 @@ def save_list(path1, intel_list, amd_list):
     f.close()
 
 
-if __name__ == '__main__':
+def main():
     download2htmlfile(url, htmlPath)
+
+    logSingle=''
+    logMulti =''
+    isSingleUpdate = False
+    isMultiUpdate = False
+
+    single_list_last = readlistGB(path[0])
+    multi_list_last  = readlistGB(path[1])
+    single_set_last = set()
+    multi_set_last  = set()
+
+    for node in single_list_last:
+        single_set_last.add(node.vendor+' '+node.name)
+    for node in multi_list_last:
+        multi_set_last.add(node.vendor+' '+node.name)
+
     singlebody, multibody = htmlfile2chart(htmlPath)
 
-
     name_list, score_list = chart2rawlist(singlebody)
-    print(len(name_list))
+    # print(len(name_list))
     intel_list, amd_list = rawlist_depart(name_list, score_list)
-    save_list(path[0], intel_list, amd_list)
-    print(unsupport_list)
-    length = len(unsupport_list)
-    print(path[0]+' is done.')
+
+    singleNew = list()
+    for node in intel_list+amd_list:
+        if node.vendor+' '+node.name in single_set_last:
+            single_set_last.remove(node.vendor+' '+node.name)
+        else:
+            singleNew.append(node.vendor+' '+node.name)
+    singleRemove = list(single_set_last)
+
+    if len(singleNew) > 0  or len(singleRemove) > 0:
+        isSingleUpdate = True
+
+        save_list(path[0], intel_list, amd_list)
+        # print(unsupport_list)
+        # length = len(unsupport_list)
+
+        if len(singleNew) > 0:
+            logSingle += '新增内容：\n'
+            for name in singleNew:
+                logSingle += '  新增 '+name+'\n'
+        if len(singleRemove) > 0:
+            logSingle += '移除内容：\n'
+            for name in singleRemove:
+                logSingle += '  移除 '+name+'\n'
+        logSingle += '\n'
+        print(path[0]+' is done.')
+    else:
+        logSingle += '\n单核数据无变更。\n\n'
 
     name_list, score_list = chart2rawlist(multibody)
-    print(len(name_list))
+    # print(len(name_list))
     intel_list, amd_list = rawlist_depart(name_list, score_list)
-    save_list(path[1], intel_list, amd_list)
-    print(unsupport_list[length:])
-    print(path[1]+' is done.')
-    
+
+    mutilNew = list()
+    for node in intel_list+amd_list:
+        if node.vendor+' '+node.name in multi_set_last:
+            multi_set_last.remove(node.vendor+' '+node.name)
+        else:
+            mutilNew.append(node.vendor+' '+node.name)
+    mutilRemove = list(multi_set_last)
+
+    if len(mutilNew) > 0  or len(mutilRemove) > 0:
+        isMultiUpdate = True
+
+        save_list(path[1], intel_list, amd_list)
+        # print(unsupport_list)
+        # length = len(unsupport_list)
+
+        if len(mutilNew) > 0:
+            logMulti += '新增内容：\n'
+            for name in mutilNew:
+                logMulti += '  新增 '+name+'\n'
+        if len(mutilRemove) > 0:
+            logMulti += '移除内容：\n'
+            for name in mutilRemove:
+                logMulti += '  移除 '+name+'\n'
+        logMulti += '\n'
+            
+        print(path[0]+' is done.')
+    else:
+        logMulti += '数据无变更。\n\n'
+
+
+    # print(logStr)
 
     print('All done.')
 
+    return isSingleUpdate, isMultiUpdate, logSingle, logMulti
+
+if __name__ == '__main__':
+    print('Do not run this.\nRun draw_gb5.py')
