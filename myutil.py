@@ -1,28 +1,58 @@
 
-class Node:
-    def __init__(self, vendor, series, name, score, platform):
-        self.vendor = vendor
-        self.series = series
+class cpuInfo:
+    name:str        # Example: i9 14900K
+    score=0         # 单核
+    scoreMulti=0    # 多核
+    vendor:str      # Intel, AMD
+    series:str      # I9, I7, R9, R7
+    platform:str    # desktop, laptop, server
+    rankingIndex=0
+    rankingIndexFix=0    # 高度修正，避免重叠
+    column=0             # 位于第几列
+    isDeprecated=False
+
+    def __init__(self, name:str='Unknown', score:int=0, scoreMulti:int=0, vendor:str='Unknown', series:str='Unknown', platform:str='Unknown'):
         self.name = name
         self.score = score
+        self.scoreMulti = scoreMulti
+        self.vendor = vendor
+        self.series = series
         self.platform = platform
-        self.high = 0
-        self.highFix = 0  # 高度修正，避免重叠
 
 
-def readlistGB(path):
-    f = open(path, 'r')
-    cnt = int(f.readline())
-    ll = []
-    for a in range(cnt):
-        vendor = f.readline().strip('\r').strip('\n')
-        series = f.readline().strip('\r').strip('\n')
-        name = f.readline().strip('\r').strip('\n')
-        score = int(f.readline().strip('\r').strip('\n'))
-        platform  = f.readline().strip('\r').strip('\n')
-        ll.append(Node(vendor, series, name, score, platform))
-    f.close()
-    return ll
+def saveDataSet(dataPath:str, cpuInfoDict:dict[str,cpuInfo]):
+    deprecateCnt=0
+    for cpu in cpuInfoDict.values():
+        if cpu.isDeprecated:
+            deprecateCnt+=1
+    
+    with open(dataPath, 'w') as f:
+        f.writelines(str(len(cpuInfoDict)-deprecateCnt) + '\n')
+        for cpu in cpuInfoDict.values():
+            if cpu.isDeprecated:
+                continue
+            f.writelines(cpu.name + '\n')
+            f.writelines(str(cpu.score) + '\n')
+            f.writelines(str(cpu.scoreMulti) + '\n')
+            f.writelines(cpu.vendor + '\n')
+            f.writelines(cpu.series + '\n')
+            f.writelines(cpu.platform + '\n')
+
+
+def loadDataSet(dataPath:str):
+    cpuInfoList = []
+    with open(dataPath, 'r') as f:
+        lines = int(f.readline())
+        for i in range(lines):
+            name = f.readline().strip()
+            score = int(f.readline().strip())
+            scoreMulti = int(f.readline().strip())
+            vendor = f.readline().strip()
+            series = f.readline().strip()
+            platform  = f.readline().strip()
+            cpuInfoList.append(cpuInfo(name, score, scoreMulti, vendor, series, platform))
+    return cpuInfoList
+
 
 def HSL2RGB(h, s, l):
     if h <= 0:
