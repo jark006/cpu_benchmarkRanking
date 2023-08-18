@@ -16,6 +16,13 @@ from myutil import *
 sourcesUrl = 'https://browser.geekbench.com/processor-benchmarks'
 htmlPath = 'data/geekbench5.html'
 dataSetPath = 'data/gb5DataSet.txt'
+qrCodePath = 'pic/qrcode.png'
+
+baiduyunShare = 'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg?pwd=etpt 提取码: etpt'
+aliyunShare = 'https://www.aliyundrive.com/s/jZUioTtYkKD'
+
+# 霞鹜新晰黑  https://github.com/lxgw/LxgwNeoXiHei
+fontPath='LXGWFasmartGothic.ttf'
 
 def draw(coreType: str, cpuInfoList: list[cpuInfo]):
 
@@ -228,8 +235,10 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
 
         # 修正分数
         fixScore = {
-            # 'i9-9980XE': 15400,
             'i7-12700': 11400,
+            'i7-13700': 15500,
+            'i5-12600KF': 10500,
+            'i5-12600K': 10500,
         }
     else:
         print("Unknown Build Type.")
@@ -310,6 +319,7 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
         'Turion': True,
         'Other': True,
     }
+    # 根据系列规划 CPU 所在的列位置
     for cpu in cpuInfoList:
         if cpu.vendor == 'AMD':
             boolDictAMD[cpu.series] = not boolDictAMD[cpu.series]
@@ -409,67 +419,70 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
         cpu.rankingIndex -= highMIN - 2
         cpu.rankingIndexFix -= highMIN - 2
 
-    # all unit is pexil
-    upEdgeHigh = int(100)  # 顶部边缘高度
-    downEdgeHigh = int(100)  # 底部边缘高度
+    # 规划图片尺寸
+    upEdgeHigh = int(100)  # 顶栏高度
+    downEdgeHigh = int(100)  # 底栏高度
     edgeWidth = int(20)  # 左右空白边缘宽度
-    textHigh = int(12)
     centerWidth = int(120)  # 中间绘制百分比区域
-    seriesWidth = textHigh * 7
-    imgHigh = (highMAX - highMIN + 1) * textHigh + upEdgeHigh + downEdgeHigh
-    imgWidth = (max(intelColumnDesktop.values()) + max(intelColumnLaptop.values()) + max(AMDColumn.values()) + 3) * seriesWidth \
+    cpuTextHigh = int(12)
+    cpuTextWidth = cpuTextHigh * 7
+    imgHigh = (highMAX - highMIN + 1) * cpuTextHigh + upEdgeHigh + downEdgeHigh
+    imgWidth = (max(intelColumnDesktop.values()) + max(intelColumnLaptop.values()) + max(AMDColumn.values()) + 3) * cpuTextWidth \
             + centerWidth + edgeWidth * 2
 
     intelLaptopXOffset = edgeWidth
-    intelDesktopXOffset = int(intelLaptopXOffset +
-                              (max(intelColumnLaptop.values()) + 1) *
-                              seriesWidth)
-    centerOffset = int(intelDesktopXOffset +
-                       (max(intelColumnDesktop.values()) + 1) * seriesWidth)
+    intelDesktopXOffset = intelLaptopXOffset + (
+        max(intelColumnLaptop.values()) + 1) * cpuTextWidth
+    centerOffset = intelDesktopXOffset + (max(intelColumnDesktop.values()) +
+                                          1) * cpuTextWidth
     amdOffset = centerOffset + centerWidth
 
-    # img[i][j] = (B, G, R, A) # A 透明度 0全透明 0xff不透明
     img = np.zeros((imgHigh, imgWidth, 4), np.uint8)
 
+    # CPU区域背景色
     img[:, 0:intelDesktopXOffset] = (230, 230, 255, 255)
     img[:, intelDesktopXOffset:centerOffset] = (220, 220, 255, 255)
     img[:, centerOffset:amdOffset] = (230, 230, 230, 255)
     img[:, amdOffset:] = (255, 230, 230, 255)
 
-    # title
+    # 顶栏背景色
     img[:upEdgeHigh, :intelDesktopXOffset] = (0, 180, 255, 255)
     img[:upEdgeHigh, intelDesktopXOffset:centerOffset] = (0, 150, 255, 255)
     img[:upEdgeHigh, amdOffset:] = (230, 0, 30, 255)
 
-    # bottom
+    # 底栏背景色
     img[-downEdgeHigh:, :] = (255, 127, 39, 255)
 
     img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGRA)
 
-    xOffset, yOffset = 30, 100
-    logo = cv2.imread(logoPath, cv2.IMREAD_UNCHANGED)
-    for x in range(0, logo.shape[0]):
-        for y in range(0, logo.shape[1]):
-            a = np.array(logo[x, y], dtype=int)
-            b = np.array(img[yOffset + x, xOffset + y], dtype=int)
-            t = (a * a[3] + b * (255 - a[3])) / 255
-            t = np.array(t, dtype=np.uint8)
-            img[yOffset + x, xOffset + y] = t
+    # 在 src 的 xOffset, yOffset 坐标上绘制 pic
+    def addPic(src, picPath, xOffset, yOffset):
+        pic = cv2.imread(picPath, cv2.IMREAD_UNCHANGED)
+        for x in range(pic.shape[1]):  # width
+            for y in range(pic.shape[0]):  # high
+                a = np.array(pic[y, x], dtype=int)
+                b = np.array(src[yOffset + y, xOffset + x], dtype=int)
+                src[yOffset + y, xOffset + x] = np.array(
+                    (a * a[3] + b * (255 - a[3])) / 255, dtype=np.uint8)
+        return pic.shape[1], pic.shape[0]
 
+    w, h = addPic(img, logoPath, 20, 100)
+    w, h = addPic(img, qrCodePath, 40 + w, 100)
+
+    # 转为 PIL 格式，用于绘制文字。（cv模式不支持自定义中文字体）
     imgPil = Image.fromarray(img)
     draw = ImageDraw.Draw(imgPil)
 
-    # 霞鹜新晰黑  https://github.com/lxgw/LxgwNeoXiHei
-    font = ImageFont.truetype('LXGWFasmartGothic.ttf', size=28)
+    font = ImageFont.truetype(fontPath, size=28)
 
-    draw.text((xOffset, yOffset + logo.shape[0] + 20),
+    draw.text((20, 100 + h + 20),
               '100%性能基准分:' + str(baseScore),
               font=font,
               fill='black')
 
     # 中间彩条
     if not isDebug:
-        for y in range(0, imgHigh - downEdgeHigh):
+        for y in range(imgHigh - downEdgeHigh):
             for x in range(centerOffset + 8, amdOffset - 8):
                 h = (3 * y - 8 * abs(x - (centerOffset + centerWidth / 2)))
                 h = ((h - (h % 200)) % imgHigh) / imgHigh
@@ -483,19 +496,19 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
         x = centerOffset + (centerWidth - w) / 2
         high = score2high(parameter, percent / 100 * baseScore,
                           highScale) - highMIN + 2
-        y = int(imgHigh - downEdgeHigh - high * textHigh)
+        y = int(imgHigh - downEdgeHigh - high * cpuTextHigh)
         h = 3 * y / imgHigh + 0.75
         h = h - int(h)
         draw.text((x, y), text, font=font, fill=tuple(HSL2RGB(h, 1, 0.30)))
 
     # 绘制 cpu
-    font = font.font_variant(size=textHigh)
+    font = font.font_variant(size=cpuTextHigh)
     AMDLaptopBackground = (180, 200, 255)
     for cpu in cpuInfoList:
         if cpu.vendor == 'AMD':
             textColor = (0, 0, 220)
-            x = amdOffset + cpu.column * seriesWidth + 5
-            y = int(imgHigh - downEdgeHigh - cpu.rankingIndexFix * textHigh)
+            x = amdOffset + cpu.column * cpuTextWidth + 5
+            y = int(imgHigh - downEdgeHigh - cpu.rankingIndexFix * cpuTextHigh)
             # if cpu.rankingIndex != cpu.rankingIndexFix:  # 修正位置时，被迫下降的高度
             #     cpu.name=cpu.name+' ^'+str(cpu.rankingIndex - cpu.rankingIndexFix)
 
@@ -509,16 +522,16 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
 
         elif cpu.platform == 'Desktop':
             textColor = (220, 0, 0)
-            x = cpu.column * seriesWidth + intelDesktopXOffset + 5
-            y = int(imgHigh - downEdgeHigh - cpu.rankingIndexFix * textHigh)
+            x = cpu.column * cpuTextWidth + intelDesktopXOffset + 5
+            y = int(imgHigh - downEdgeHigh - cpu.rankingIndexFix * cpuTextHigh)
             # if cpu.rankingIndex != cpu.rankingIndexFix:  # 修正位置时，被迫下降的高度
             #     cpu.name=cpu.name+' ^'+str(cpu.rankingIndex - cpu.rankingIndexFix)
             draw.text((x, y), cpu.name, font=font, fill=textColor)
 
         else:
             textColor = (220, 0, 0)
-            x = cpu.column * seriesWidth + intelLaptopXOffset + 5
-            y = int(imgHigh - downEdgeHigh - cpu.rankingIndexFix * textHigh)
+            x = cpu.column * cpuTextWidth + intelLaptopXOffset + 5
+            y = int(imgHigh - downEdgeHigh - cpu.rankingIndexFix * cpuTextHigh)
             # if cpu.rankingIndex != cpu.rankingIndexFix:  # 修正位置时，被迫下降的高度
             #     cpu.name=cpu.name+' ^'+str(cpu.rankingIndex - cpu.rankingIndexFix)
             draw.text((x, y), cpu.name, font=font, fill=textColor)
@@ -538,55 +551,55 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
     x, y = amdOffset + (imgWidth - amdOffset - w) / 2, (100 - h) / 2
     draw.text((intelLaptopXOffset + x, y), text, font=font, fill='white')
 
-    text = 'Build ' + buildDateStr + ' ' + curVer
     y = imgHigh - 85
     font = font.font_variant(size=36)
-    draw.text((25, y), title, font=font, fill='white')
-    _, _, w, _ = font.getbbox(text)
-    draw.text((imgWidth - w - 25, y), text, font=font, fill='white')
+    draw.text((25, y), title + '  Build ' + buildDateStr + ' ' + curVer, font=font, fill='white')
+    _, _, w, _ = font.getbbox(authorInfo)
+    draw.text((imgWidth - w - 25, y), authorInfo, font=font, fill='white')
 
     font = font.font_variant(size=24)
-    draw.text((25, y + 40), '数据源  ' + sourcesUrl, font=font, fill='white')
+    draw.text((25, y + 48),
+              '阿里盘更新 ' + aliyunShare + '  百度盘更新 ' + baiduyunShare,
+              font=font,
+              fill='white')
+    
+    # 基本绘制完成， 转回 cv 格式
+    img = np.array(imgPil)
 
-    _, _, w, _ = font.getbbox(authorInfo)
-    draw.text((imgWidth - w - 25, y + 45), authorInfo, font=font, fill='white')
 
     # debug 模式
     if isDebug:
         img = np.array(imgPil)
-
         cv2.imencode(picFormat, img)[1].tofile(savePath)
         print('Debug Mode')
         print(title + ' is done.')
         exit()
 
     # 绘制水印层
-    font = font.font_variant(size=36)
-    text = watermarkText + '\n' + 'Build ' + buildDateStr + ' ' + curVer + '\n' + authorInfo
+    font = font.font_variant(size=24)
+    text = watermarkText + '\n' + 'Build ' + buildDateStr + ' ' + curVer + '    ' + authorInfo + '\n' + baiduyunShare + '\n' + aliyunShare
     _, _, w, h = font.getbbox(text)
-    watermaskImg = np.zeros((imgHigh, imgWidth * 2, 4), np.uint8)
+    size = 2 * max(imgHigh, imgWidth)
+    watermaskImg = np.zeros((size, size, 4), np.uint8)
     watermaskImg[:, :] = (0, 0, 0, 1)
     watermaskImgPil = Image.fromarray(watermaskImg)
     draw = ImageDraw.Draw(watermaskImgPil)
-    for y in range(15, imgHigh, 6 * h):
-        for x in range(15, imgWidth, int(0.6 * w)):
+    for y in range(15, size, 8 * h):
+        for x in range(15, size, int(0.4 * w)):
             draw.text((x + random.randint(0, 20), y + random.randint(0, 20)),
                       text,
                       font=font,
                       fill=HSL2RGB(0.2 + random.random() * 0.2, 1, 0.4))
 
-    # 水印层旋转加裁切
     watermaskImg = np.array(watermaskImgPil)
-    matRotate = cv2.getRotationMatrix2D(
-        (imgHigh * 0.5, imgHigh * 0.5), 45,
-        1)  # mat rotate 1 center 2 angle 3 缩放系数
-    watermaskImg = cv2.warpAffine(watermaskImg, matRotate, (imgHigh, imgHigh))
-    w = int((imgHigh - imgWidth) / 2)
-    watermaskImg = watermaskImg[:, w:w + imgWidth]
-    watermaskImg = cv2.resize(watermaskImg, (imgWidth, imgHigh),
-                              interpolation=cv2.INTER_AREA)
+    matRotate = cv2.getRotationMatrix2D((size / 2, size / 2), 45,
+                                        1)  # center, angle, scale
+    watermaskImg = cv2.warpAffine(watermaskImg, matRotate, (size, size))
+    xStart, yStart = int((size - imgHigh) / 2), int((size - imgWidth) / 2)
+    watermaskImg = watermaskImg[yStart:yStart + imgHigh,
+                                xStart:xStart + imgWidth]
 
-    img = np.array(imgPil)
+    
     img = cv2.addWeighted(img, 1, watermaskImg, 0.1, 0)  # 叠加水印层
 
     # 保存图片
@@ -598,9 +611,7 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
 
 if __name__ == '__main__':
     import download_gb5
-
-    download_gb5.downloadHTML(sourcesUrl, htmlPath)
-    download_gb5.parseHTML(htmlPath, dataSetPath)
+    download_gb5.downloadAndParseHTML(sourcesUrl, dataSetPath)
     cpuInfoList = loadDataSet(dataSetPath)
 
     draw('Single', cpuInfoList)

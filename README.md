@@ -13,13 +13,12 @@ pip install numpy scipy matplotlib opencv-python beautifulsoup4 pillow
 
 ## 说明
 
-1. 运行`draw_gb5.py`将生成图片到目录 `output/`。
-1. Run `draw_gb5.py` will generate images to the directory `output/`.
+1. 运行`draw_gb5.py`将生成图片到目录 `output/`。Run `draw_gb5.py` will generate images to the directory `output/`.
 
-# Geekbench source
+# Geekbench Data Source
 https://browser.geekbench.com/processor-benchmarks
 
 ---
 # Result 最终效果
 
-![](pic/GeekBench5_Multi_20230818_V2.1.png)
+![](pic/GeekBench5_Single_20230818_V2.1.png)

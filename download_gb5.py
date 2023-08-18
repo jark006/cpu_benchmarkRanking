@@ -9,19 +9,8 @@ def unsupport(reason:str, cpuName:str):
     unsupport_list.add(cpuName)
     return
 
-
-def downloadHTML(url:str, htmlPath:str):
-    print('Downloading from {} ...'.format(url))
-    req = urllib.request.Request(url=url, headers={
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'})
-    res = urllib.request.urlopen(req)
-    html = res.read().decode('utf-8')
-    with open(htmlPath, 'w', encoding='utf-8') as f:
-        f.write(html)
-
-
 def parseBody(body):
-    CpuInfoList = []
+    CpuInfoList:list[cpuInfo] = []
     for tr in body.find_all('tr'):
         name = tr.find('a').text.strip('\n')
         score = tr.find('td', class_='score').text.strip('\n')
@@ -29,10 +18,12 @@ def parseBody(body):
     return CpuInfoList
 
 
-def parseHTML(htmlPath:str, DataSetPath:str):
-    print('Readind HTML file:', htmlPath)
-    with open(htmlPath, 'r', encoding='utf-8') as f:
-        html = f.read()
+def downloadAndParseHTML(url:str, DataSetPath:str):
+    print('Downloading from {} ...'.format(url))
+    req = urllib.request.Request(url=url, headers={
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36'})
+    res = urllib.request.urlopen(req)
+    html = res.read().decode('utf-8')
 
     print('Start parse HTML file ...')
     singleBody = BeautifulSoup(html, "html.parser").find('div', id='single-core').find('tbody')
@@ -42,7 +33,7 @@ def parseHTML(htmlPath:str, DataSetPath:str):
     parseCpuInfoList(singleCoreCpuInfoList)
     parseCpuInfoList(multiCoreCpuInfoList)
 
-    cpuInfoDict={}
+    cpuInfoDict:dict[str,cpuInfo]={}
     for cpu in singleCoreCpuInfoList:
         cpuInfoDict[cpu.name]=cpu
 
@@ -57,10 +48,8 @@ def parseHTML(htmlPath:str, DataSetPath:str):
 
 
 def parseCpuInfoList(cpuInfoList:list[cpuInfo]):    
-
     for cpu in cpuInfoList:
-        orgName = cpu.name
-
+        nameBackup = cpu.name
         cpu.name = cpu.name.replace('Microsoft Surface Edition', '')
         if 'Intel' in cpu.name:
             cpu.vendor = 'Intel'
@@ -112,7 +101,7 @@ def parseCpuInfoList(cpuInfoList:list[cpuInfo]):
                     cpu.name = cpu.name[cpu.name.index('Xeon'):].replace('Xeon', '').replace('Processor', '')
                     cpu.series = 'E5'if 'E5-' in cpu.name else 'Xeon'
                     if len(cpu.name) < 1:
-                        cpu.name=orgName
+                        cpu.name=nameBackup
                 else:
                     cpu.isDeprecated=True
                     unsupport('Unknown Intel', cpu.name)
