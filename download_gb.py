@@ -245,4 +245,4 @@ def parseCpuInfoList(cpuInfoList:list[cpuInfo]):
 
 
 if __name__ == '__main__':
-    print('Do not run this.\nRun draw_gb5.py')
+    print('Do not run this.\nRun draw_gb.py')

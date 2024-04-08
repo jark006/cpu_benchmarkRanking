@@ -3,6 +3,7 @@ class cpuInfo:
     name:str        # Example: i9 14900K
     score=0         # 单核
     scoreMulti=0    # 多核
+    score4sort=0
     vendor:str      # Intel, AMD
     series:str      # I9, I7, R9, R7
     platform:str    # desktop, laptop, server

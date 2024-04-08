@@ -21,4 +21,4 @@ https://browser.geekbench.com/processor-benchmarks
 ---
 # Result 最终效果
 
-![](pic/GeekBench5_Single_20230818_V2.1.png)
+![](pic/GeekBench5_Overall_20240408_V2.2.png)
