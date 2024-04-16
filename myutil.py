@@ -20,6 +20,24 @@ class cpuInfo:
         self.series = series
         self.platform = platform
 
+class gpuInfo:
+    name:str        # Example: RTX4090
+    score=0         # 单核
+    vendor:str      # Intel, AMD
+    series:str      # 第几代
+    platform:str    # desktop, laptop, server
+    rankingIndex=0
+    rankingIndexFix=0    # 高度修正，避免重叠
+    column=0             # 位于第几列
+    isDeprecated=False
+
+    def __init__(self, name:str='Unknown', score:int=0, scoreMulti:int=0, vendor:str='Unknown', series:str='Unknown', platform:str='Unknown'):
+        self.name = name
+        self.score = score
+        self.scoreMulti = scoreMulti
+        self.vendor = vendor
+        self.series = series
+        self.platform = platform
 
 def saveDataSet(dataPath:str, cpuInfoDict:dict[str,cpuInfo]):
     deprecateCnt=0

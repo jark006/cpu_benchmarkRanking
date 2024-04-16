@@ -185,7 +185,7 @@ def draw(coreType: str, cpuInfoList: list[cpuInfo]):
         cpu.score4sort = int(cpu.score*0.3+cpu.scoreMulti*0.7)
 
     # 排序
-    cpuInfoList.sort(key=lambda e: e.score4sort)
+    cpuInfoList.sort(key=lambda e: e.score4sort, reverse=True)
 
 
     # 拟合函数
