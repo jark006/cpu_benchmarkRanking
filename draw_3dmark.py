@@ -16,12 +16,12 @@ from myutil import *
 isDebug = False
 dataSource = '3DMark TimeSpy'
 authorInfo = 'Make by JARK006'
-curVer = 'V1.0'
+curVer = 'V1.1'
 picFormat = '.png'
 buildDateStr = time.strftime("%Y%m%d", time.localtime())
 sourcesUrl = 'https://benchmarks.ul.com/zh-hans/compare/best-gpus'
 dataSetPath = 'data/3dmarkDataSet.txt'
-qrCodePath = 'pic/qrcode.png'
+qrCodePath = 'pic/qrcode2.png'
 
 baiduyunShare = 'https://pan.baidu.com/s/1PII6fOqHPoyRy-pr37CPBg?pwd=etpt 提取码: etpt'
 aliyunShare = 'https://www.aliyundrive.com/s/jZUioTtYkKD'
@@ -48,20 +48,20 @@ fixMultiScore = {
 
 # 所有系列分成两列  各系列所在 第几列：
 NvidiaColumn = {
-    'RTX4': 5,
-    'RTX3': 4,
-    'RTXA': 4,
-    'RTX2': 3,
-    'RTX1': 3,
-    'GTX16': 2,
-    'GTX10': 1,
-    'GTX9': 0,
-    'GTX8': 0,
-    'GTX7': 5,
-    'GTX6': 4,
-    'GT': 3,
-    'Titan': 2,
-    'Mobile': 2,
+    'RTX4': 4,
+    'RTX3': 3,
+    'RTXA': 3,
+    'RTX2': 2,
+    'RTX1': 2,
+    'GTX16': 1,
+    'GTX10': 0,
+    'GTX9': 4,
+    'GTX8': 4,
+    'GTX7': 3,
+    'GTX6': 2,
+    'GT': 2,
+    'Titan': 1,
+    'Mobile': 1,
 }
 
 IntelColumn = {
@@ -118,20 +118,20 @@ def draw(coreType: str, gpuInfoList: list[gpuInfo]):
     global IntelColumn
     global AMDColumn
 
-    savePath = 'output/3DMark_' + '_' + buildDateStr + '_' + curVer + picFormat
+    savePath = 'output/GPU性能天梯图3DMark_' + buildDateStr + '_' + curVer + picFormat
 
-    highScale = 0.5  #高度比例
+    highScale = 0.4  #高度比例
     fixOffset = 10000
     baseScore = 10000
     # parameter = [ 796.621935379174, -6120.371397702502, -498.7991449765785 ]
     parameter = [ 342.681689559398, -9299.090611064696, -49.0954724653573 ]
     title = dataSource + ' GPU性能天梯图'
-    watermarkText = title + ' Overall'
-    logoPath = 'pic/logoGB6.png'
+    watermarkText = title
+    logoPath = 'pic/3dmark.png'
     percentList = \
         [i for i in range(10,  100, 10)]+\
         [i for i in range(100, 200, 20)]+\
-        [i for i in range(200, 500, 50)]
+        [i for i in range(200, 401, 50)]
 
     # 排序
     gpuInfoList.sort(key=lambda e: e.score, reverse=True)
@@ -322,8 +322,8 @@ def draw(coreType: str, gpuInfoList: list[gpuInfo]):
                     (a * a[3] + b * (255 - a[3])) / 255, dtype=np.uint8)
         return pic.shape[1], pic.shape[0]
 
-    # w, h = addPic(img, logoPath, 20, 120)
-    # w, h = addPic(img, qrCodePath, 20, 130+h)
+    w, h = addPic(img, logoPath, 10, 120)
+    w, h = addPic(img, qrCodePath, 20+w, 120)
 
     # 转为 PIL 格式，用于绘制文字。（cv模式不支持自定义中文字体）
     imgPil = Image.fromarray(img)
@@ -422,7 +422,7 @@ def draw(coreType: str, gpuInfoList: list[gpuInfo]):
     _, _, w, _ = font.getbbox(authorInfo)
     draw.text((imgWidth - w - 25, y), authorInfo, font=font, fill='white')
 
-    font = font.font_variant(size=24)
+    font = font.font_variant(size=20)
     draw.text((25, y + 46),
               '基于3DMarkTimeSpy公开数据制作，以10000分为100%性能基准', 
               font=font,
