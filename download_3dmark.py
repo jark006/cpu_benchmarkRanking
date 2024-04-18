@@ -111,17 +111,12 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
                 unsupport('Intel The length of the name is illegal:', gpu.name)
                 continue
 
-            if ('M' in gpu.name):
+            if 'M'== gpu.name[-1]:
                 gpu.platform = 'Laptop'
-
-            # if gpu.name[-3] == 'G' and gpu.name[-1] == 'E':
-            #     gpu.platform = 'Laptop'
-
-            # if gpu.name[0] == 'i' and (gpu.name[-1] == 'G' or gpu.name[-2] == 'G'):
-            #     gpu.platform = 'Laptop'
-            
-            # if gpu.series == 'Xeon':
-            #     gpu.platform = 'Desktop'
+            if 'M)'in gpu.name:
+                gpu.platform = 'Laptop'
+            if 'Mobile'in gpu.name:
+                gpu.platform = 'Laptop'
 
         elif 'AMD' in gpu.name:
             gpu.vendor='AMD'
@@ -135,9 +130,9 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
                     elif '6' == gpu.name[3]:
                         gpu.series = 'RX6'
                     elif '5' == gpu.name[3]:
-                        gpu.series = 'RX5' if len(gpu.name) > 6 else 'RX50'
+                        gpu.series = 'RX5' if (len(gpu.name) > 6 and gpu.name[6]=='0')else 'RX500'
                     elif '4' == gpu.name[3]:
-                        gpu.series = 'RX4' if len(gpu.name) > 6 else 'RX40'
+                        gpu.series = 'RX4'
                     elif ('Vega' in gpu.name):
                         gpu.name = gpu.name[gpu.name.index('Vega'):]
                         gpu.series = 'Vega'
@@ -181,7 +176,9 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
                 unsupport('AMD The length of the name is illegal:', gpu.name)
                 continue
 
-            if gpu.name[-1:] == 'M':
+            if gpu.name[-1:] == 'M' or gpu.name[-1:] == 'S':
+                gpu.platform = 'Laptop'
+            if len(gpu.name) > 4 and gpu.name[-4:] == 'M XT':
                 gpu.platform = 'Laptop'
             if ('Mobile' in gpu.name):
                 gpu.platform = 'Laptop'
@@ -215,6 +212,9 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
                 elif 'GTX 10' in gpu.name:
                     gpu.series = 'GTX10'
                     gpu.name = gpu.name[gpu.name.index('GTX 10'):]
+                elif 'P106' in gpu.name:
+                    gpu.series = 'GTX10'
+                    gpu.name = gpu.name[gpu.name.index('NVIDIA')+7:]
                 elif 'GTX 9' in gpu.name:
                     gpu.series = 'GTX9'
                     gpu.name = gpu.name[gpu.name.index('GTX 9'):]
@@ -237,11 +237,11 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
                     gpu.series = 'RTX3'
                     gpu.name = 'RTX '+gpu.name[gpu.name.index('GeForce')+8:]
                 elif 'MX' in gpu.name:
-                    gpu.series = 'Mobile'
+                    gpu.series = 'MX'
                     gpu.name = gpu.name[gpu.name.index('MX'):]
-                elif 'M' == gpu.name[-1]:
-                    gpu.series = 'Mobile'
-                    gpu.name = gpu.name[gpu.name.index('GeForce')+8:]
+                elif '950M' in gpu.name:
+                    gpu.series = 'GTX9'
+                    gpu.name = 'GTX '+gpu.name[gpu.name.index('GeForce')+8:]
                 else:
                     gpu.isDeprecated=True
                     unsupport('NVIDIA Exception', gpu.name)

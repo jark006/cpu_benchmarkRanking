@@ -32,18 +32,22 @@ fontPath='LXGWFasmartGothic.ttf'
 
 # 在此添加 Geekbench 未收录的 GPU
 addMore:list[gpuInfo] = [
-    # gpuInfo('R5 5600X3D', 2200, 10500, 'AMD', 'R5', 'Desktop'),
+    gpuInfo('RX 7900M', 19434, 0, 'AMD', 'RX7', 'Laptop'),
+    gpuInfo('RX 6850M XT 175W', 12674, 0, 'AMD', 'RX6', 'Laptop'),
+    gpuInfo('RX 6850M XT 140W', 11633, 0, 'AMD', 'RX6', 'Laptop'),
+    gpuInfo('RX 6550M', 4546, 0, 'AMD', 'RX6', 'Laptop'),
+    gpuInfo('RX 6500M', 4380, 0, 'AMD', 'RX6', 'Laptop'),
+    gpuInfo('RX 5500M', 4220, 0, 'AMD', 'RX5', 'Laptop'),
+
+    gpuInfo('Arc A550M', 5552, 0, 'Intel', 'Arc', 'Laptop'),
+    gpuInfo('Arc A370M', 3650, 0, 'Intel', 'Arc', 'Laptop'),
+    gpuInfo('Arc A350M', 2900, 0, 'Intel', 'Arc', 'Laptop'),
+    gpuInfo('Arc A310', 3270, 0, 'Intel', 'Arc', 'Desktop'),
 ]
 
-# 修正单核分数
-fixSingleScore = {
-    # 'i7-12700': 2350,
-    # 'R5 7600X': 2750,
-}
-# 修正多核分数
-fixMultiScore = {
-    # 'i7-12700': 11400,
-    # 'i7-13700': 15500,
+# 修正分数
+fixScore = {
+    'RTX 4060 Ti 16 GB': 13510,
 }
 
 # 所有系列分成两列  各系列所在 第几列：
@@ -61,7 +65,7 @@ NvidiaColumn = {
     'GTX6': 2,
     'GT': 2,
     'Titan': 1,
-    'Mobile': 1,
+    'MX': 1,
 }
 
 IntelColumn = {
@@ -75,15 +79,14 @@ AMDColumn = {
     'RX7': 0,
     'RX6': 1,
     'RX5': 2,
-    'RX4': 3,
-    'RX50': 3,
-    'RX40': 3,
+    'RX500': 3,
+    'RX4': 4,
     'R9': 0,
     'R7': 1,
     'R5': 2,
     'Vega': 1,
     'Radeon': 1,
-    'Other': 2,
+    'Other': 1,
 }
 
 def processData(gpuInfoList: list[gpuInfo]):
@@ -98,17 +101,14 @@ def processData(gpuInfoList: list[gpuInfo]):
     # 添加新 GPU 数据
     for i in addMore:
         if not setTmp.__contains__(i.name):
-            print('Add', i.name, i.score, i.scoreMulti)
+            print('Add', i.name, i.score)
             gpuInfoList.append(i)
 
     # 修正分数
     for gpu in gpuInfoList:
-        if fixSingleScore.__contains__(gpu.name):
-            print('fixSingleScore {}: {} to {}'.format(gpu.name, gpu.score, fixSingleScore[gpu.name]))
-            gpu.score = fixSingleScore[gpu.name]
-        if fixMultiScore.__contains__(gpu.name):
-            print('fixMultiScore {}: {} to {}'.format(gpu.name, gpu.score, fixMultiScore[gpu.name]))
-            gpu.scoreMulti = fixMultiScore[gpu.name]
+        if fixScore.__contains__(gpu.name):
+            print('fixScore {}: {} to {}'.format(gpu.name, gpu.score, fixScore[gpu.name]))
+            gpu.score = fixScore[gpu.name]
 
     print('process Done')
 
@@ -278,15 +278,16 @@ def draw(coreType: str, gpuInfoList: list[gpuInfo]):
     # 规划图片尺寸
     upEdgeHigh = int(100)  # 顶栏高度
     downEdgeHigh = int(120)  # 底栏高度
-    edgeWidth = int(20)  # 左右空白边缘宽度
+    leftEdgeWidth = int(20)  # 左右空白边缘宽度
+    rightEdgeWidth = int(20)  # 左右空白边缘宽度
     centerWidth = int(120)  # 中间绘制百分比区域
     gpuTextHigh = int(12)
-    gpuTextWidth = gpuTextHigh * 12
+    gpuTextWidth = gpuTextHigh * 11
     imgHigh = (highMAX - highMIN + 1) * gpuTextHigh + upEdgeHigh + downEdgeHigh
     imgWidth = (max(IntelColumn.values()) + max(NvidiaColumn.values()) + max(AMDColumn.values()) + 3) * gpuTextWidth \
-            + centerWidth + edgeWidth * 2
+            + centerWidth + leftEdgeWidth
 
-    intelXOffset = edgeWidth
+    intelXOffset = leftEdgeWidth
     nvidiaXOffset = intelXOffset + (
         max(IntelColumn.values()) + 1) * gpuTextWidth
     centerOffset = nvidiaXOffset + (max(NvidiaColumn.values()) +
@@ -359,8 +360,9 @@ def draw(coreType: str, gpuInfoList: list[gpuInfo]):
 
     # 绘制 gpu
     font = font.font_variant(size=gpuTextHigh)
-    AMDLaptopBackground = (180, 200, 255)
+    AMDLaptopBackground = (180, 200, 255) #BGR
     NvidiaLaptopBackground = (160, 220, 200)
+    IntelLaptopBackground = (220, 200, 200)
     for gpu in gpuInfoList:
         if gpu.vendor == 'AMD':
             textColor = (0, 0, 220)
@@ -397,6 +399,14 @@ def draw(coreType: str, gpuInfoList: list[gpuInfo]):
             y = int(imgHigh - downEdgeHigh - gpu.rankingIndexFix * gpuTextHigh)
             # if gpu.rankingIndex != gpu.rankingIndexFix:  # 修正位置时，被迫下降的高度
             #     gpu.name=gpu.name+' ^'+str(gpu.rankingIndex - gpu.rankingIndexFix)
+
+            
+            if gpu.platform == 'Laptop':
+                _, _, w, h = font.getbbox(gpu.name)
+                draw.rectangle((x - 2, y, x + w + 1, y + h),
+                               fill=IntelLaptopBackground)
+            draw.text((x, y), gpu.name, font=font, fill=textColor)
+
             draw.text((x, y), gpu.name, font=font, fill=textColor)
 
     font = font.font_variant(size=48)
