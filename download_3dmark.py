@@ -125,7 +125,9 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
             try:
                 if 'RX' in gpu.name:
                     gpu.name = gpu.name[gpu.name.index('RX'):]
-                    if '7' == gpu.name[3]:
+                    if '9' == gpu.name[3]:
+                        gpu.series = 'RX9'
+                    elif '7' == gpu.name[3]:
                         gpu.series = 'RX7'
                     elif '6' == gpu.name[3]:
                         gpu.series = 'RX6'
@@ -190,7 +192,11 @@ def parseGpuInfoList(gpuInfoList:list[gpuInfo]):
             try:
                 if 'RTX' in gpu.name:
                     gpu.name = gpu.name[gpu.name.index('RTX'):]
-                    if gpu.name[4] =='4':
+                    if gpu.name[4] =='6':
+                        gpu.series = 'RTX6'
+                    elif gpu.name[4] =='5':
+                        gpu.series = 'RTX5'
+                    elif gpu.name[4] =='4':
                         gpu.series = 'RTX4'
                     elif gpu.name[4] =='3':
                         gpu.series = 'RTX3'

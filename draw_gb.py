@@ -521,8 +521,8 @@ def draw(cpuInfoList: list[cpuInfo]):
 if __name__ == "__main__":
     import download_gb
 
-    # download_gb.downloadAndParseHTML(sourcesUrl, dataSetPath)
-    cpuInfoList = loadDataSet(dataSetPath)
+    download_gb.downloadAndParseHTML(sourcesUrl, dataSetPath)
+    cpuInfoList = load_CPU_DataSet(dataSetPath)
 
     processData(cpuInfoList)
     draw(cpuInfoList)

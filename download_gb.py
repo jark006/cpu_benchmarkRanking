@@ -44,7 +44,7 @@ def downloadAndParseHTML(url:str, DataSetPath:str):
         if cpu.score == 0 or cpu.scoreMulti == 0:
             cpu.isDeprecated=True
 
-    saveDataSet(DataSetPath, cpuInfoDict)
+    save_CPU_DataSet(DataSetPath, cpuInfoDict)
 
 
 def parseCpuInfoList(cpuInfoList:list[cpuInfo]):    
